@@ -10,14 +10,14 @@ import {
 
 import theme from "@theme/index";
 import { Loading } from "@components/Loading";
-import SignIn from "@screens/SignIn";
+import { Routes } from "@routes/index";
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
 
   return (
     <ThemeProvider theme={theme}>
-      <AppProvider>{fontsLoaded ? <SignIn /> : <Loading />}</AppProvider>
+      <AppProvider>{fontsLoaded ? <Routes /> : <Loading />}</AppProvider>
       <FlashMessage position="top" />
     </ThemeProvider>
   );

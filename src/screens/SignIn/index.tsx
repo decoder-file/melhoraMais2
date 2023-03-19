@@ -14,7 +14,7 @@ import { BorderlessButton } from "react-native-gesture-handler";
 import { showMessage } from "react-native-flash-message";
 
 import { PasswordInput } from "@components/PasswordInput";
-import { Input } from "@components/Input";
+import { InputEmail } from "@components/InputEmail";
 import { useAuth } from "../../hooks/auth";
 
 import * as S from "./styles";
@@ -80,7 +80,7 @@ export default function SignIn() {
               gado.
             </S.SubTitle>
           </S.Header>
-          <Input
+          <InputEmail
             placeholder="E-mail"
             keyboardType="email-address"
             autoCorrect={false}

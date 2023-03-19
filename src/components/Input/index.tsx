@@ -1,44 +1,47 @@
-import { useState } from "react";
-
-import { Envelope } from "phosphor-react-native";
+import React from "react";
 import { TextInputProps } from "react-native";
-import { useTheme } from "styled-components";
 
-import * as S from "./styles";
+import {
+  Container,
+  TitleInput,
+  InputField,
+  ContainerError,
+  TextError,
+} from "./styles";
 
-interface Props extends TextInputProps {
-  value?: string;
+export interface PropsInput extends TextInputProps {
+  title: string;
+  error?: string;
+  touched?: boolean;
+  marginTop?: number;
+  marginBottom?: number;
 }
 
-export function Input({ value, ...rest }: Props) {
-  const theme = useTheme();
+export function Input({
+  title,
+  error,
+  touched,
+  marginTop,
+  marginBottom,
+  ...rest
+}: PropsInput) {
+  const validationColor = !touched ? "#FFFFFF" : error ? "#FF5A5F" : "#FFFFFF";
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [isFilled, setIsFilled] = useState(false);
-
-  function handleInputFocus() {
-    setIsFocused(true);
-  }
-
-  function handleInputBlur() {
-    setIsFocused(false);
-    setIsFilled(!!value);
-  }
   return (
-    <S.Container>
-      <S.IconContainer>
-        <Envelope
-          size={24}
-          color={
-            isFocused || isFilled ? theme.COLORS.PRIMARY : theme.COLORS.GRAY_200
-          }
-        />
-      </S.IconContainer>
-      <S.InputText
-        {...rest}
-        onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
-      />
-    </S.Container>
+    <>
+      <TitleInput marginTop={marginTop}>{title}</TitleInput>
+
+      <Container
+        style={{ borderColor: validationColor }}
+        marginBottom={marginBottom}
+      >
+        <InputField {...rest} />
+      </Container>
+      {error ? (
+        <ContainerError>
+          <TextError>{error}</TextError>
+        </ContainerError>
+      ) : null}
+    </>
   );
 }
