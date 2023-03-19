@@ -7,14 +7,14 @@ import {
 
 import theme from "@theme/index";
 import { Loading } from "@components/Loading";
-import Home from "@screens/Home";
+import SignIn from "@screens/SignIn";
 
 export default function App() {
   const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
 
   return (
     <ThemeProvider theme={theme}>
-      {fontsLoaded ? <Home /> : <Loading />}
+      {fontsLoaded ? <SignIn /> : <Loading />}
     </ThemeProvider>
   );
 }
