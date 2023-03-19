@@ -10,8 +10,7 @@ export function Routes() {
   const { user } = useAuth();
   return (
     <NavigationContainer>
-      {/* {user?.id ? <AppRoutes /> : <AuthRoutes />} */}
-      <AppRoutes /> 
+      {user?.id ? <AppRoutes /> : <AuthRoutes />}
     </NavigationContainer>
   );
 }

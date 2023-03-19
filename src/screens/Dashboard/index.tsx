@@ -31,7 +31,7 @@ import { ModalContent } from "../../components/ModalContent";
 import { Temperature } from "../../components/Temperature";
 
 import { useAuth } from "../../hooks/auth";
-import {api} from "../../services/api";
+import { api } from "../../services/api";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes/app.routes";
 
@@ -43,9 +43,9 @@ interface CalculationsProps {
 }
 
 interface DashboardProps
-  extends StackScreenProps<RootStackParamList, 'Dashboard'> {}
+  extends StackScreenProps<RootStackParamList, "Dashboard"> {}
 
-export function Dashboard({navigation}:DashboardProps) {
+export function Dashboard({ navigation }: DashboardProps) {
   const { user } = useAuth();
   const [isModalVisible, setModalVisible] = useState(false);
   const [hourly, setHourly] = useState<any[]>([]);
@@ -54,7 +54,7 @@ export function Dashboard({navigation}:DashboardProps) {
   const [locationLat, setLocationLat] = useState(0);
   const [locationLon, setLocationLon] = useState(0);
   const [errorMsg, setErrorMsg] = useState("");
-  const [currentCalculation, setCurrentCalculation] = useState('')
+  const [currentCalculation, setCurrentCalculation] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -78,34 +78,34 @@ export function Dashboard({navigation}:DashboardProps) {
     setModalVisible(!isModalVisible);
   };
 
-  const selectCalculation =  (id: string) => {
-    setCurrentCalculation(id)
-    toggleModal()
-  }
+  const selectCalculation = (id: string) => {
+    setCurrentCalculation(id);
+    toggleModal();
+  };
 
   const deleteCalculation = async () => {
     const value = currentCalculation.valueOf();
     api
-    .delete(`/calculations/${value}`)
-    .then((response) => {
-      toggleModal()
-      if(response.status){
+      .delete(`/calculations/${value}`)
+      .then((response) => {
+        toggleModal();
+        if (response.status) {
+          showMessage({
+            message: "Cálculo excluído com sucesso!",
+            type: "success",
+            icon: "success",
+          });
+        }
+      })
+      .catch((err) => {
         showMessage({
-          message: "Cálculo excluído com sucesso!",
-          type: "success",
-          icon: "success",
+          message: "Error!",
+          description: "Ocorreu para carregar as tag personalizadas",
+          type: "danger",
+          icon: "danger",
         });
-      }
-    })
-    .catch((err) => {
-      showMessage({
-        message: "Error!",
-        description: "Ocorreu para carregar as tag personalizadas",
-        type: "danger",
-        icon: "danger",
       });
-    });
-  }
+  };
 
   const weatherForecast = async () => {
     setLoadingHourly(true);
@@ -139,12 +139,13 @@ export function Dashboard({navigation}:DashboardProps) {
     api
       .get("/calculations")
       .then((response) => {
+      
         setCalculations(response.data);
       })
       .catch((err) => {
         showMessage({
           message: "Error!",
-          description: "Ocorreu para carregar as tag personalizadas",
+          description: "Ocorreu para carregar cálculos",
           type: "danger",
           icon: "danger",
         });
@@ -212,7 +213,9 @@ export function Dashboard({navigation}:DashboardProps) {
             {calculations.length > 0 ? (
               calculations.map((e) => (
                 <CardCalculation
-                  clickCalculationCard={() => navigation.navigate("RegisterCalculationEdit", {id: e.id})}
+                  clickCalculationCard={() =>
+                    navigation.navigate("RegisterCalculationEdit", { id: e.id })
+                  }
                   deleteCalculation={() => selectCalculation(e.id)}
                   key={e.id}
                   title={e.title}
