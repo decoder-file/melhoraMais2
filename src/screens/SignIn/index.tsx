@@ -10,16 +10,18 @@ import {
 } from "react-native";
 
 import { useTheme } from "styled-components";
+import { BorderlessButton } from "react-native-gesture-handler";
+import { showMessage } from "react-native-flash-message";
 
 import { PasswordInput } from "@components/PasswordInput";
 import { Input } from "@components/Input";
+import { useAuth } from "../../hooks/auth";
 
 import * as S from "./styles";
-import { showMessage } from "react-native-flash-message";
-import { BorderlessButton } from "react-native-gesture-handler";
 
 export default function SignIn() {
   const theme = useTheme();
+  const {signIn} = useAuth()
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,7 +35,9 @@ export default function SignIn() {
         password: Yup.string().required("A senha é obrigatório"),
       });
 
-      await schema.validate({ email, password });
+      // await schema.validate({ email, password });
+      console.log({ email, password })
+      await signIn({ email, password });
       showMessage({
         message: "Sucesso!",
         description: "Login realizado com sucesso!",

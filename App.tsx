@@ -1,5 +1,6 @@
 import { ThemeProvider } from "styled-components/native";
 import FlashMessage from "react-native-flash-message";
+import { AppProvider } from "./src/hooks";
 
 import {
   useFonts,
@@ -16,7 +17,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      {fontsLoaded ? <SignIn /> : <Loading />}
+      <AppProvider>{fontsLoaded ? <SignIn /> : <Loading />}</AppProvider>
       <FlashMessage position="top" />
     </ThemeProvider>
   );
