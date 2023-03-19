@@ -1,4 +1,6 @@
 import { ThemeProvider } from "styled-components/native";
+import FlashMessage from "react-native-flash-message";
+
 import {
   useFonts,
   Roboto_400Regular,
@@ -15,6 +17,7 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       {fontsLoaded ? <SignIn /> : <Loading />}
+      <FlashMessage position="top" />
     </ThemeProvider>
   );
 }

@@ -1,5 +1,9 @@
 import { TextInput } from "react-native";
-import styled from "styled-components/native";
+import styled, { css } from "styled-components/native";
+
+interface Props {
+  isFocused: boolean;
+}
 
 export const Container = styled.View`
   flex-direction: row;

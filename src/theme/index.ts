@@ -11,6 +11,8 @@ export default {
     PRIMARY: "#FEC321",
     SECONDARY: "#FF5531",
     GRAY_700: "#121214",
+    GRAY_600: '#47474D',
+    GRAY_500: '#7A7A80',
     GRAY_300: "#7C7C8A",
     GRAY_200: "#C4C4CC",
     GRAY_100: "#E1E1E6",
@@ -25,5 +27,6 @@ export default {
     MD: 16,
     LG: 18,
     XL: 24,
+    XXL: 36,
   },
 };
