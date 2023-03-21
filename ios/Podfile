@@ -57,6 +57,9 @@ target 'melhoraMais20' do
     :flipper_configuration => flipper_config
   )
 
+  pod 'React-jsi', :path => '../node_modules/react-native/ReactCommon/jsi', :modular_headers => true
+  pod 'simdjson', path: '../node_modules/@nozbe/simdjson'
+
   post_install do |installer|
     react_native_post_install(
       installer,
