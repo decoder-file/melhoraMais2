@@ -139,7 +139,6 @@ export function Dashboard({ navigation }: DashboardProps) {
     api
       .get("/calculations")
       .then((response) => {
-      
         setCalculations(response.data);
       })
       .catch((err) => {

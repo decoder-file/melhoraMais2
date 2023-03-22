@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 
 import {
-  Alert,
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
@@ -18,16 +17,17 @@ import { InputEmail } from "@components/InputEmail";
 import { useAuth } from "../../hooks/auth";
 
 import * as S from "./styles";
-import { database } from "../../database/index";
 
 export default function SignIn() {
   const theme = useTheme();
   const {signIn} = useAuth()
 
+  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function handleSignIn() {
+    setLoading(true)
     try {
       const schema = Yup.object().shape({
         email: Yup.string()
@@ -36,14 +36,14 @@ export default function SignIn() {
         password: Yup.string().required("A senha é obrigatório"),
       });
 
-      // await schema.validate({ email, password });
-      console.log({ email, password })
+      await schema.validate({ email, password });
       await signIn({ email, password });
       showMessage({
         message: "Sucesso!",
         description: "Login realizado com sucesso!",
         type: "success",
       });
+      setLoading(false)
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         showMessage({
@@ -51,6 +51,7 @@ export default function SignIn() {
           description: error.message,
           type: "danger",
         });
+        setLoading(false)
       } else {
         showMessage({
           message: "Error na autenticação",
@@ -58,18 +59,11 @@ export default function SignIn() {
             "Ocorreu um erro ao fazer login, verifique as credenciais",
           type: "danger",
         });
+        setLoading(false)
       }
     }
+    setLoading(false)
   }
-
-  useEffect(() => {
-    async function loadData() {
-      const userColletion = database.get('users')
-      const users = await userColletion.query().fetch();
-      console.log(users)
-    }
-    loadData()
-  })
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -111,8 +105,8 @@ export default function SignIn() {
           <S.ButtonLogin
             title="Entrar"
             onPress={handleSignIn}
-            enabled={true}
-            loading={false}
+            enabled={!loading}
+            loading={loading}
           />
         </S.Container>
 

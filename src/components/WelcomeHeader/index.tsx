@@ -19,11 +19,8 @@ interface WelcomeHeaderProps {
 export function WelcomeHeader({ name }: WelcomeHeaderProps) {
   // const navigation = useNavigation();
 
-  // const { signOut } = useAuth();
+  const { signOut } = useAuth();
 
-  const handleSignOut = async () => {
-    // await signOut();
-  };
   return (
     <Container>
       <ContainerName>
@@ -36,7 +33,7 @@ export function WelcomeHeader({ name }: WelcomeHeaderProps) {
         </ButtonName>
       </ContainerName>
 
-      <ButtonExit onPress={() => handleSignOut()}>
+      <ButtonExit onPress={signOut}>
         <TitleExit>Sair</TitleExit>
       </ButtonExit>
     </Container>
