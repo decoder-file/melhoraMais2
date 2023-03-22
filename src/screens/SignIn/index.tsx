@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import * as Yup from "yup";
 
@@ -18,6 +18,7 @@ import { InputEmail } from "@components/InputEmail";
 import { useAuth } from "../../hooks/auth";
 
 import * as S from "./styles";
+import { database } from "../../database/index";
 
 export default function SignIn() {
   const theme = useTheme();
@@ -60,6 +61,15 @@ export default function SignIn() {
       }
     }
   }
+
+  useEffect(() => {
+    async function loadData() {
+      const userColletion = database.get('users')
+      const users = await userColletion.query().fetch();
+      console.log(users)
+    }
+    loadData()
+  })
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
