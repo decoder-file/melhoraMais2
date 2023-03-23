@@ -29,3 +29,13 @@ export const InputText = styled(TextInput)`
   border-radius: 8px;
   padding: 0 23px;
 `;
+
+export const ContainerError = styled.View`
+  margin-top: 10px;
+`;
+
+export const TextError = styled.Text`
+  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
+  font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
+  color: ${({ theme }) => theme.COLORS.RED};
+`;

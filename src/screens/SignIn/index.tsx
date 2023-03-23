@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import * as Yup from "yup";
 
@@ -11,6 +11,7 @@ import {
 import { useTheme } from "styled-components";
 import { BorderlessButton } from "react-native-gesture-handler";
 import { showMessage } from "react-native-flash-message";
+import { useNavigation } from "@react-navigation/native";
 
 import { PasswordInput } from "@components/PasswordInput";
 import { InputEmail } from "@components/InputEmail";
@@ -21,6 +22,7 @@ import * as S from "./styles";
 export default function SignIn() {
   const theme = useTheme();
   const {signIn} = useAuth()
+  const navigation = useNavigation();
 
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("");
@@ -111,7 +113,7 @@ export default function SignIn() {
         </S.Container>
 
         <S.Footer>
-          <BorderlessButton>
+          <BorderlessButton onPress={() => navigation.navigate('registration')}>
             <S.ButtonCreateAccount>
               Não tem uma conta? Faça seu cadastro
             </S.ButtonCreateAccount>

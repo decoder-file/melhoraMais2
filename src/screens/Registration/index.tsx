@@ -1,16 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+} from "react-native";
+
 import { useNavigation } from "@react-navigation/native";
-import { ScrollView } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { showMessage } from "react-native-flash-message";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { InputEmail } from "@components/InputEmail";
+import { User } from "phosphor-react-native";
+import { PasswordInput } from "@components/PasswordInput";
 
-import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import { Input } from "../../components/Input";
-import { Button } from "../../components/Button";
-
 import { api } from "../../services/api";
+import theme from "@theme/index";
 
 import {
   Container,
@@ -18,136 +24,135 @@ import {
   Separator,
   Title,
   BackButton,
+  ConfirmButton,
+  BackButtonText,
+  Caption,
 } from "./styles";
-
-const RegistrationSchema = Yup.object().shape({
-  name: Yup.string().min(2).required("Campo nome obrigatório"),
-  email: Yup.string()
-    .email("Email inválido")
-    .required("Campo e-mail obrigatório"),
-  password: Yup.string().min(4).required("Campo senha obrigatório"),
-  confirmPassword: Yup.string()
-    .min(4)
-    .required("Campo confirmar senha obrigatório"),
-});
 
 export function Registration() {
   const navigation = useNavigation();
 
-  const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
-    useFormik({
-      validationSchema: RegistrationSchema,
-      initialValues: { name: "", email: "", password: "", confirmPassword: "" },
+  const [loading, setLoading] = useState(false);
 
-      onSubmit: async (v) => {
-        if (values.password === values.confirmPassword) {
-          try {
-            await api.post("/users", v);
-            showMessage({
-              message: "Cadastro realizado com sucesso!",
-              description: "Você já pode realizar o login no aplicativo",
-              type: "success",
-              icon: "success",
-            });
-            navigation.goBack();
-          } catch (err: any) {
-            showMessage({
-              message: "Erro no cadastro",
-              description:
-                "Ocorreu um erro inesperado. Tente novamente mais tarde!",
-              type: "danger",
-              icon: "danger",
-            });
-          }
-        } else {
-          showMessage({
-            message: "Erro no cadastro",
-            description: "Os campos senhas devem ser iguais!",
-            type: "danger",
-            icon: "danger",
-          });
-        }
-      },
-    });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  async function handleRegister() {
+    if (password !== confirmPassword) {
+      showMessage({
+        message: "Erro!",
+        description: "As senhas não são iguais. Tente novamente.",
+        type: "danger",
+        icon: "danger",
+      });
+      return;
+    }
+    setLoading(true);
+    try {
+      const schema = Yup.object().shape({
+        name: Yup.string().required("Campo nome obrigatório"),
+        email: Yup.string()
+          .email("Email inválido")
+          .required("Campo e-mail obrigatório"),
+        password: Yup.string().required("Campo senha obrigatório"),
+      });
+
+      await schema.validate({ email, password, name });
+      await api.post("/users", { name, email, password });
+      showMessage({
+        message: "Cadastro realizado com sucesso!",
+        description: "Você já pode realizar o login no aplicativo",
+        type: "success",
+        icon: "success",
+      });
+      navigation.goBack();
+      setLoading(false);
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        showMessage({
+          message: "Opa",
+          description: error.message,
+          type: "danger",
+        });
+        setLoading(false);
+      } else {
+        showMessage({
+          message: "Erro no cadastro",
+          description:
+            "Ocorreu um erro inesperado. Tente novamente mais tarde!",
+          type: "danger",
+          icon: "danger",
+        });
+        setLoading(false);
+      }
+    }
+    setLoading(false);
+  }
 
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-      style={{ backgroundColor: "#FCF9F2" }}
-    >
-      <Container>
-        <BackButton activeOpacity={0.8} onPress={() => navigation.goBack()}>
-          <AntDesign name="left" size={24} color="black" />
-        </BackButton>
-        <Title>Criar conta</Title>
-        <ContainerInput>
-          <Input
-            title="Nome"
-            placeholder="Informe seu nome"
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardAppearance="dark"
-            onChangeText={handleChange("name")}
-            onBlur={handleBlur("name")}
-            error={errors.name}
-            touched={touched.name}
-            value={values.name}
-          />
-          <Separator />
-          <Input
-            title="Email "
-            placeholder="Informe seu E-mail "
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="email-address"
-            keyboardAppearance="dark"
-            autoComplete="email"
-            onChangeText={handleChange("email")}
-            onBlur={handleBlur("email")}
-            error={errors.email}
-            touched={touched.email}
-            value={values.email}
-          />
-          <Separator />
-          <Input
-            title="Senha"
-            secureTextEntry
-            placeholder="Informe sua senha"
-            autoCorrect={false}
-            autoComplete="password"
-            autoCapitalize="none"
-            keyboardAppearance="dark"
-            onChangeText={handleChange("confirmPassword")}
-            onBlur={handleBlur("confirmPassword")}
-            error={errors.confirmPassword}
-            touched={touched.confirmPassword}
-            onSubmitEditing={() => handleSubmit()}
-            value={values.confirmPassword}
-          />
-          <Separator />
-          <Input
-            title="Confirme sua senha"
-            secureTextEntry
-            placeholder="confirme sua senha"
-            autoCorrect={false}
-            autoCapitalize="none"
-            keyboardAppearance="dark"
-            autoComplete="password"
-            onChangeText={handleChange("password")}
-            onBlur={handleBlur("password")}
-            error={errors.password}
-            touched={touched.password}
-            onSubmitEditing={() => handleSubmit()}
-            value={values.password}
-          />
-        </ContainerInput>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior="height"
+        enabled
+        style={{
+          flex: 1,
+          backgroundColor: theme.COLORS.GRAY_50,
+          justifyContent: "center",
+        }}
+      >
+        <SafeAreaView style={{ backgroundColor: "#FCF9ED", flex: 1 }}>
+          <Container>
+            <BackButton onPress={() => navigation.goBack()}>
+              <AntDesign name="left" size={24} color="black" />
+              <BackButtonText>Voltar</BackButtonText>
+            </BackButton>
+            <Title>Crie sua{"\n"}conta</Title>
+            <Caption>Faça seu cadastro de{"\n"}forma rápida e fácil.</Caption>
+            <ContainerInput>
+              <InputEmail
+                placeholder="Informe seu nome"
+                autoCorrect={false}
+                onChangeText={setName}
+                value={name}
+                returnKeyType="next"
+                icon={<User />}
+              />
+              <Separator />
+              <InputEmail
+                placeholder="E-mail"
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoCapitalize="none"
+                onChangeText={setEmail}
+                returnKeyType="next"
+                value={email}
+              />
+              <Separator />
+              <PasswordInput
+                placeholder="Informe sua senha"
+                onChangeText={setPassword}
+                returnKeyType="next"
+                value={password}
+              />
+              <Separator />
+              <PasswordInput
+                placeholder="Confirme sua senha"
+                onChangeText={setConfirmPassword}
+                value={confirmPassword}
+              />
+            </ContainerInput>
 
-        <Button
-          title="Criar conta"
-          onPress={() => handleSubmit()}
-        />
-      </Container>
-    </ScrollView>
+            <ConfirmButton
+              title="Criar conta"
+              onPress={handleRegister}
+              enabled={!loading}
+              loading={loading}
+            />
+          </Container>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }

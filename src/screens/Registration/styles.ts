@@ -1,9 +1,10 @@
+import { BorderlessButton } from "react-native-gesture-handler";
 import styled from "styled-components/native";
 
+import { Button } from "../../components/Button";
+
 export const Container = styled.View`
-  flex: 1;
-  justify-content: center;
-  padding: 3px;
+  padding: 0 24px;
   background-color: ${({ theme }) => theme.COLORS.GRAY_50};
 `;
 
@@ -14,18 +15,35 @@ export const Separator = styled.View`
 `;
 
 export const Title = styled.Text`
-  font-size: 16px;
-  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
-  margin-bottom: 35px;
+  font-size: ${({ theme }) => theme.FONT_SIZE.XXL}px;
+  font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
+  color: ${({ theme }) => theme.COLORS.GRAY_600};
+  margin-bottom: 16px;
 `;
 
-export const BackButton = styled.TouchableOpacity`
-  width: 41px;
+export const Caption = styled.Text`
+  font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
+  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
+  color: ${({ theme }) => theme.COLORS.GRAY_500};
+  line-height: 25px;
+  margin-bottom: 32px;
+  margin-bottom: 16px;
+`
+
+export const BackButton = styled(BorderlessButton)`
   height: 41px;
-  background: #ffffff;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
   margin-bottom: 40px;
-  justify-content: center;
+  flex-direction: row;
   align-items: center;
 `;
+
+export const BackButtonText = styled.Text`
+  margin-left: 10px;
+  font-size: ${({ theme }) => theme.FONT_SIZE.SM}px;
+  font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
+  color: ${({ theme }) => theme.COLORS.GRAY_600};
+`
+
+export const ConfirmButton = styled(Button)`
+  margin-top: 20px;
+`
