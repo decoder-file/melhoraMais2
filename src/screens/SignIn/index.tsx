@@ -100,7 +100,7 @@ export default function SignIn() {
             value={password}
           />
 
-          <BorderlessButton>
+          <BorderlessButton onPress={() => navigation.navigate('tokenSending')}>
             <S.ButtonForgotPassword>Esqueci minha senha</S.ButtonForgotPassword>
           </BorderlessButton>
 

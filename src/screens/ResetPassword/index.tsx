@@ -29,13 +29,12 @@ import {
   Caption,
 } from "./styles";
 
-export function SignUp() {
+export function ResetPassword() {
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(false);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -52,18 +51,17 @@ export function SignUp() {
     setLoading(true);
     try {
       const schema = Yup.object().shape({
-        name: Yup.string().required("Campo nome obrigatório"),
         email: Yup.string()
           .email("Email inválido")
           .required("Campo e-mail é obrigatório"),
-        password: Yup.string().required("Campo senha é obrigatório"),
+        password: Yup.string().required("Campo token é obrigatório"),
       });
 
-      await schema.validate({ email, password, name });
-      await api.post("/users", { name, email, password });
+      await schema.validate({ token, password });
+      await api.post(`reset-password?${token}`, { token, password });
       showMessage({
-        message: "Cadastro realizado com sucesso!",
-        description: "Você já pode realizar o login no aplicativo",
+        message: "Token enviado com sucesso!",
+        description: "Utilize o token para alterar sua senha",
         type: "success",
         icon: "success",
       });
@@ -79,7 +77,7 @@ export function SignUp() {
         setLoading(false);
       } else {
         showMessage({
-          message: "Erro no cadastro",
+          message: "Erro no envio do token",
           description:
             "Ocorreu um erro inesperado. Tente novamente mais tarde!",
           type: "danger",
@@ -108,26 +106,19 @@ export function SignUp() {
               <AntDesign name="left" size={24} color="black" />
               <BackButtonText>Voltar</BackButtonText>
             </BackButton>
-            <Title>Crie sua{"\n"}conta</Title>
-            <Caption>Faça seu cadastro de{"\n"}forma rápida e fácil.</Caption>
+            <Title>Recuperação de conta</Title>
+            <Caption>
+              Informe o código de seis dígitos que o acabou de chegar no seu
+              e-mail
+            </Caption>
             <ContainerInput>
               <InputEmail
-                placeholder="Informe seu nome"
-                autoCorrect={false}
-                onChangeText={setName}
-                value={name}
-                returnKeyType="next"
-                icon={<User />}
-              />
-              <Separator />
-              <InputEmail
-                placeholder="E-mail"
-                keyboardType="email-address"
+                placeholder="Digite o Token"
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={setEmail}
+                onChangeText={setToken}
                 returnKeyType="next"
-                value={email}
+                value={token}
               />
               <Separator />
               <PasswordInput
@@ -145,7 +136,7 @@ export function SignUp() {
             </ContainerInput>
 
             <ConfirmButton
-              title="Criar conta"
+              title="Confirmar Senha"
               onPress={handleRegister}
               enabled={!loading}
               loading={loading}

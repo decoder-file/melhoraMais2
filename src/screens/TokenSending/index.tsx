@@ -29,45 +29,31 @@ import {
   Caption,
 } from "./styles";
 
-export function SignUp() {
+export function TokenSending() {
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(false);
 
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
   async function handleRegister() {
-    if (password !== confirmPassword) {
-      showMessage({
-        message: "Erro!",
-        description: "As senhas não são iguais. Tente novamente.",
-        type: "danger",
-        icon: "danger",
-      });
-      return;
-    }
     setLoading(true);
     try {
       const schema = Yup.object().shape({
-        name: Yup.string().required("Campo nome obrigatório"),
         email: Yup.string()
           .email("Email inválido")
           .required("Campo e-mail é obrigatório"),
-        password: Yup.string().required("Campo senha é obrigatório"),
       });
 
-      await schema.validate({ email, password, name });
-      await api.post("/users", { name, email, password });
+      await schema.validate({ email });
+      await api.post("/forgot-password", { email });
       showMessage({
-        message: "Cadastro realizado com sucesso!",
-        description: "Você já pode realizar o login no aplicativo",
+        message: "Token enviado com sucesso!",
+        description: "Utilize o token para alterar sua senha",
         type: "success",
         icon: "success",
       });
-      navigation.goBack();
+      navigation.navigate('resetPassword');
       setLoading(false);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
@@ -79,7 +65,7 @@ export function SignUp() {
         setLoading(false);
       } else {
         showMessage({
-          message: "Erro no cadastro",
+          message: "Erro no envio do token",
           description:
             "Ocorreu um erro inesperado. Tente novamente mais tarde!",
           type: "danger",
@@ -108,18 +94,12 @@ export function SignUp() {
               <AntDesign name="left" size={24} color="black" />
               <BackButtonText>Voltar</BackButtonText>
             </BackButton>
-            <Title>Crie sua{"\n"}conta</Title>
-            <Caption>Faça seu cadastro de{"\n"}forma rápida e fácil.</Caption>
+            <Title>Problemas para fazer login?</Title>
+            <Caption>
+              Digite seu e-mail e enviaremos um token para você voltar com sua
+              conta.
+            </Caption>
             <ContainerInput>
-              <InputEmail
-                placeholder="Informe seu nome"
-                autoCorrect={false}
-                onChangeText={setName}
-                value={name}
-                returnKeyType="next"
-                icon={<User />}
-              />
-              <Separator />
               <InputEmail
                 placeholder="E-mail"
                 keyboardType="email-address"
@@ -129,23 +109,10 @@ export function SignUp() {
                 returnKeyType="next"
                 value={email}
               />
-              <Separator />
-              <PasswordInput
-                placeholder="Informe sua senha"
-                onChangeText={setPassword}
-                returnKeyType="next"
-                value={password}
-              />
-              <Separator />
-              <PasswordInput
-                placeholder="Confirme sua senha"
-                onChangeText={setConfirmPassword}
-                value={confirmPassword}
-              />
             </ContainerInput>
 
             <ConfirmButton
-              title="Criar conta"
+              title="Enviar Token"
               onPress={handleRegister}
               enabled={!loading}
               loading={loading}
