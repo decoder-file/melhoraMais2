@@ -113,7 +113,7 @@ export default function SignIn() {
         </S.Container>
 
         <S.Footer>
-          <BorderlessButton onPress={() => navigation.navigate('registration')}>
+          <BorderlessButton onPress={() => navigation.navigate('signUp')}>
             <S.ButtonCreateAccount>
               Não tem uma conta? Faça seu cadastro
             </S.ButtonCreateAccount>

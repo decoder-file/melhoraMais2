@@ -29,7 +29,7 @@ import {
   Caption,
 } from "./styles";
 
-export function Registration() {
+export function SignUp() {
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(false);
