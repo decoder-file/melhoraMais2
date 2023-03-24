@@ -103,7 +103,7 @@ export function Dashboard({ navigation }: DashboardProps) {
             icon: "success",
           });
           setLoadingDeleteCalculation(false);
-          setModalDeleteCalculation(false)
+          setModalDeleteCalculation(false);
         }
       })
       .catch((err) => {
@@ -114,7 +114,7 @@ export function Dashboard({ navigation }: DashboardProps) {
           icon: "danger",
         });
         setLoadingDeleteCalculation(false);
-        setModalDeleteCalculation(false)
+        setModalDeleteCalculation(false);
       });
   };
 
@@ -206,7 +206,10 @@ export function Dashboard({ navigation }: DashboardProps) {
 
   return (
     <>
-      <WelcomeHeader name={user?.name} signOut={() => setModal(true)} />
+      <WelcomeHeader
+        name={user?.name.replace(/^\w/, (c) => c.toUpperCase())}
+        signOut={() => setModal(true)}
+      />
       <Container>
         <View>
           <ContainerTemperature>{loadWeatherForecast()}</ContainerTemperature>
