@@ -9,7 +9,6 @@ import React, {
 import { api } from "../services/api";
 import { database } from "../database";
 import { User as ModelUser } from "../database/model/User";
-import { Alert } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 interface User {
@@ -51,6 +50,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
       const { access_token, user } = response.data;
 
+      console.log('acabou de entrar', access_token)
       api.defaults.headers.authorization = `Bearer ${access_token}`;
 
       const userCollection = database.get<ModelUser>("users");
@@ -102,6 +102,8 @@ function AuthProvider({ children }: AuthProviderProps) {
 
       if (response.length > 0) {
         const userData = response[0]._raw as unknown as User;
+
+        console.log('useEffect - já tem token', userData.access_token)
         api.defaults.headers.authorization = `Bearer ${userData.access_token}`;
         setData(userData);
       }

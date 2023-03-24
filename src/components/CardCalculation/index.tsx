@@ -10,13 +10,16 @@ import {
   Title,
   ContainerDescription,
   Description,
-  Localization,
   ButtonDelete,
-  ContainerLocalization,
   TitleTag,
   Tag,
+  CreationData,
+  CreationDataText,
+  TextBold,
+  ContainerTag,
 } from "./styles";
 import { api } from "../../services/api";
+import { Calendar } from "phosphor-react-native";
 
 export interface ButtonProps extends TouchableOpacityProps {
   tagId?: string;
@@ -42,7 +45,6 @@ export function CardCalculation({
     api
       .get("/tag-calculations")
       .then((response) => {
-        console.log(response.data);
         setListTag(response.data);
       })
       .catch((err) => {
@@ -57,13 +59,12 @@ export function CardCalculation({
 
   const selectedTagSearch = () => {
     if (tagId) {
-      function buscarNumerosPares(value) {
+      function buscarNumerosPares(value: any) {
         if (value.id === tagId) return value;
       }
 
       if (listTag) {
         const tag = listTag.filter(buscarNumerosPares);
-        // console.log('######', listTag)
         setTagInfo(tag);
       }
     }
@@ -78,23 +79,29 @@ export function CardCalculation({
   }, [listTag]);
 
   return (
-    <Container marginTop={marginTop}>
+    <Container>
       <ContainerDescription activeOpacity={0.8} onPress={clickCalculationCard}>
         {tagInfo.length > 0 && (
-          <Tag
-            activeOpacity={0.8}
-            style={{ backgroundColor: tagInfo[0].color }}
-          >
-            <TitleTag>{tagInfo[0].title}</TitleTag>
-          </Tag>
+          <ContainerTag>
+            <Tag
+              activeOpacity={0.8}
+              style={{ backgroundColor: tagInfo[0].color }}
+            >
+              <TitleTag>{tagInfo[0].title}</TitleTag>
+            </Tag>
+          </ContainerTag>
         )}
 
         <Title>{title}</Title>
-        <Description>R$ {parseInt(result)}</Description>
-        {/* <ContainerLocalization>
-          <Entypo name="location-pin" size={20} color="black" />
-          <Localization>Janaúba - MG</Localization>
-        </ContainerLocalization> */}
+
+        <Description>
+          <TextBold>Total: </TextBold>R${parseInt(result)}
+        </Description>
+
+        <CreationData>
+          <Calendar size={20} />
+          <CreationDataText>12/01/2001</CreationDataText>
+        </CreationData>
       </ContainerDescription>
 
       <ButtonDelete activeOpacity={0.8} onPress={deleteCalculation}>

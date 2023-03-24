@@ -3,10 +3,8 @@ import React, { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import { showMessage } from "react-native-flash-message";
 import { ScrollView, View } from "react-native";
-// import Modal from "react-native-modal";
 
-import { useNavigation } from "@react-navigation/native";
-
+import { useNetInfo } from "@react-native-community/netinfo";
 import { Ionicons } from "@expo/vector-icons";
 
 import axios from "axios";
@@ -25,9 +23,9 @@ import {
   LoadingHourly,
   TextLoadingHourly,
   NotCalculations,
+  ModalExit,
 } from "./styles";
 
-import { ModalContent } from "../../components/ModalContent";
 import { Temperature } from "../../components/Temperature";
 
 import { useAuth } from "../../hooks/auth";
@@ -46,7 +44,9 @@ interface DashboardProps
   extends StackScreenProps<RootStackParamList, "Dashboard"> {}
 
 export function Dashboard({ navigation }: DashboardProps) {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const netInfo = useNetInfo();
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [hourly, setHourly] = useState<any[]>([]);
   const [loadingHourly, setLoadingHourly] = useState(false);
@@ -55,6 +55,8 @@ export function Dashboard({ navigation }: DashboardProps) {
   const [locationLon, setLocationLon] = useState(0);
   const [errorMsg, setErrorMsg] = useState("");
   const [currentCalculation, setCurrentCalculation] = useState("");
+  const [loadingSignOut, setLoadingSignOut] = useState(false)
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -179,6 +181,12 @@ export function Dashboard({ navigation }: DashboardProps) {
     }
   };
 
+  const handleSignOut = async () => {
+    setLoadingSignOut(true)
+    await signOut();
+    setLoadingSignOut(false)
+  };
+
   useEffect(() => {
     weatherForecast();
   }, []);
@@ -189,7 +197,7 @@ export function Dashboard({ navigation }: DashboardProps) {
 
   return (
     <>
-      <WelcomeHeader name={user?.name} />
+      <WelcomeHeader name={user?.name} signOut={() => setModal(true)} />
       <Container>
         <View>
           <ContainerTemperature>{loadWeatherForecast()}</ContainerTemperature>
@@ -227,11 +235,23 @@ export function Dashboard({ navigation }: DashboardProps) {
             )}
           </ScrollView>
         </ContainerCard>
-
-        {/* <Modal isVisible={isModalVisible}>
-          <ModalContent close={toggleModal} confirmButton={deleteCalculation} />
-        </Modal> */}
       </Container>
+
+      <ModalExit
+        show={modal}
+        close={() => setModal(false)}
+        cancelButtonText="Cancelar"
+        confirmButtonText="Sair"
+        onPressConfirmButton={handleSignOut}
+        message={
+          netInfo.isConnected
+            ? "Tem certeza que deseja sair do aplicativo? Todos os dados não salvos serão perdidos."
+            : "Desculpe, você parece estar sem conexão com a internet no momento. Se você sair do aplicativo agora, poderá perder quaisquer dados não salvos. Verifique sua conexão com a internet antes de continuar."
+        }
+        enabledConfirmButton={!loadingSignOut}
+        loadingConfirmButton={loadingSignOut}
+        enabledCancelButton={!loadingSignOut}
+      />
     </>
   );
 }

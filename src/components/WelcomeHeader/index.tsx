@@ -15,35 +15,10 @@ import {
 
 interface WelcomeHeaderProps {
   name: string;
+  signOut: () => void;
 }
 
-export function WelcomeHeader({ name }: WelcomeHeaderProps) {
-  // const navigation = useNavigation();
-
-  async function handleSignOut() {
-    Alert.alert(
-      "Sair",
-      "Deseja realmente sair? \nprecisará de internet para conectar-se novamente",
-      [
-        {
-          text: "Não",
-        },
-        {
-          text: "Sim",
-          onPress: () => {
-            try {
-              signOut();
-            } catch (err) {
-              console.log(err);
-            }
-          },
-        },
-      ]
-    );
-  }
-
-  const { signOut } = useAuth();
-
+export function WelcomeHeader({ name, signOut }: WelcomeHeaderProps) {
   return (
     <Container>
       <ContainerName>
@@ -56,7 +31,7 @@ export function WelcomeHeader({ name }: WelcomeHeaderProps) {
         </ButtonName>
       </ContainerName>
 
-      <ButtonExit onPress={handleSignOut}>
+      <ButtonExit onPress={signOut}>
         <TitleExit>Sair</TitleExit>
       </ButtonExit>
     </Container>

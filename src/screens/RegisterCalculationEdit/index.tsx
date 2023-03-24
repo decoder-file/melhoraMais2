@@ -70,7 +70,6 @@ export function RegisterCalculationEdit({
       .get(`/calculations/${value}`)
       .then((response) => {
         setListCalculations(response.data);
-        console.log("response.data", response.data);
         setSelectTagId(response.data.tag);
       })
       .catch((err) => {

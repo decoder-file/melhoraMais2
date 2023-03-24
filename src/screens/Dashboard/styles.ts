@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import Modal from "../../components/Modal";
 
 export const Container = styled.View`
   flex: 1;
@@ -24,9 +25,10 @@ export const ContainerCard = styled.View`
 `;
 
 export const TitleContainerCard = styled.Text`
-  font-size: 14px;
+  color: ${({ theme }) => theme.COLORS.GRAY_700};
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
-  margin-bottom: 10px;
+  font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
+  margin-bottom: 20px;
 `;
 
 export const ContainerTemperature = styled.ScrollView.attrs({
@@ -53,3 +55,5 @@ export const NotCalculations = styled.Text`
   margin-top: 40%;
   opacity: 0.5;
 `;
+
+export const ModalExit = styled(Modal)``;
