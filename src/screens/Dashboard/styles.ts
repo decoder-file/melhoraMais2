@@ -57,3 +57,5 @@ export const NotCalculations = styled.Text`
 `;
 
 export const ModalExit = styled(Modal)``;
+
+export const ModalDeleteCalculation = styled(Modal)``;

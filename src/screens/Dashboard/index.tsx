@@ -24,6 +24,7 @@ import {
   TextLoadingHourly,
   NotCalculations,
   ModalExit,
+  ModalDeleteCalculation,
 } from "./styles";
 
 import { Temperature } from "../../components/Temperature";
@@ -55,8 +56,11 @@ export function Dashboard({ navigation }: DashboardProps) {
   const [locationLon, setLocationLon] = useState(0);
   const [errorMsg, setErrorMsg] = useState("");
   const [currentCalculation, setCurrentCalculation] = useState("");
-  const [loadingSignOut, setLoadingSignOut] = useState(false)
+  const [loadingSignOut, setLoadingSignOut] = useState(false);
   const [modal, setModal] = useState(false);
+  const [modalDeleteCalculation, setModalDeleteCalculation] = useState(false);
+  const [loadingDeleteCalculation, setLoadingDeleteCalculation] =
+    useState(false);
 
   useEffect(() => {
     (async () => {
@@ -86,6 +90,7 @@ export function Dashboard({ navigation }: DashboardProps) {
   };
 
   const deleteCalculation = async () => {
+    setLoadingDeleteCalculation(true);
     const value = currentCalculation.valueOf();
     api
       .delete(`/calculations/${value}`)
@@ -97,6 +102,8 @@ export function Dashboard({ navigation }: DashboardProps) {
             type: "success",
             icon: "success",
           });
+          setLoadingDeleteCalculation(false);
+          setModalDeleteCalculation(false)
         }
       })
       .catch((err) => {
@@ -106,6 +113,8 @@ export function Dashboard({ navigation }: DashboardProps) {
           type: "danger",
           icon: "danger",
         });
+        setLoadingDeleteCalculation(false);
+        setModalDeleteCalculation(false)
       });
   };
 
@@ -182,9 +191,9 @@ export function Dashboard({ navigation }: DashboardProps) {
   };
 
   const handleSignOut = async () => {
-    setLoadingSignOut(true)
+    setLoadingSignOut(true);
     await signOut();
-    setLoadingSignOut(false)
+    setLoadingSignOut(false);
   };
 
   useEffect(() => {
@@ -223,7 +232,9 @@ export function Dashboard({ navigation }: DashboardProps) {
                   clickCalculationCard={() =>
                     navigation.navigate("RegisterCalculationEdit", { id: e.id })
                   }
-                  deleteCalculation={() => selectCalculation(e.id)}
+                  deleteCalculation={() => {
+                    selectCalculation(e.id), setModalDeleteCalculation(true);
+                  }}
                   key={e.id}
                   title={e.title}
                   result={e.result}
@@ -251,6 +262,18 @@ export function Dashboard({ navigation }: DashboardProps) {
         enabledConfirmButton={!loadingSignOut}
         loadingConfirmButton={loadingSignOut}
         enabledCancelButton={!loadingSignOut}
+      />
+
+      <ModalDeleteCalculation
+        show={modalDeleteCalculation}
+        close={() => setModalDeleteCalculation(false)}
+        cancelButtonText="Cancelar"
+        confirmButtonText="Excluir"
+        onPressConfirmButton={deleteCalculation}
+        message="Tem certeza que deseja excluir este cálculo? Esta ação não pode ser desfeita e todos os dados relacionados serão perdidos."
+        enabledConfirmButton={!loadingDeleteCalculation}
+        loadingConfirmButton={loadingDeleteCalculation}
+        enabledCancelButton={!loadingDeleteCalculation}
       />
     </>
   );
