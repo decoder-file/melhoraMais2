@@ -5,6 +5,8 @@ export declare global {
       signUp: undefined;
       resetPassword: undefined;
       tokenSending: undefined;
+      Dashboard: undefined;
+      CreateTag: undefined;
     }
   }
 }

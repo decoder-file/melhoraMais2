@@ -3,7 +3,7 @@ import { TextInput } from "react-native";
 import styled from "styled-components/native";
 
 export const Container = styled.View`
-  width: 45%;
+  width: 100%;
 `;
 
 export const ContainerInput = styled.View`
@@ -44,7 +44,6 @@ export const ContainerTitle = styled.View`
   flex-direction: row;
   align-items: center;
   margin-bottom: 2px;
-  position: fixed;
   width: 100%;
   min-height: 37px;
 `;

@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import { Button } from "../../components/Button";
 
 export const Container = styled.View`
   flex: 1;
@@ -6,16 +7,11 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.COLORS.GRAY_50};
 `;
 
-export const ContainerInputSlider = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 20px;
-`;
-
 export const TitleTag = styled.Text`
   font-size: 18px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   margin-bottom: 10px;
+  margin-top: 30px;
 `;
 
 export const ContainerTag = styled.ScrollView.attrs({
@@ -36,4 +32,9 @@ export const TitleButtonTag = styled.Text`
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   color: ${({ theme }) => theme.COLORS.PRIMARY};
   text-decoration: underline ${({ theme }) => theme.COLORS.PRIMARY};
+`;
+
+export const ButtonHandleSubmit = styled(Button)`
+  margin-top: 30px;
+  margin-bottom: 30px;
 `;

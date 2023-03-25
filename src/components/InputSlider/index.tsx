@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 // import Tooltip from "react-native-walkthrough-tooltip";
-// import Slider from "@react-native-community/slider";
+import Slider from "@react-native-community/slider";
 
 import { TextInputProps } from "react-native";
 
@@ -16,13 +16,13 @@ import {
   TextError,
 } from "./styles";
 
-
 interface InputSliderProps extends TextInputProps {
   title: string;
   tooltip?: string;
   error?: React.ReactNode;
-  sliderValue?: (d: string) => void;
+  sliderValue: ((value: number) => void) | undefined;
   isSlide?: boolean;
+  inputValue: number;
 }
 
 export function InputSlider({
@@ -31,9 +31,9 @@ export function InputSlider({
   sliderValue,
   error,
   isSlide,
+  inputValue,
   ...rest
 }: InputSliderProps) {
-  const [toolTipVisible, setToolTipVisible] = useState(false);
   return (
     <>
       <Container>
@@ -55,27 +55,25 @@ export function InputSlider({
         </ContainerTitle>
 
         <ContainerInput>
-          <InputField
-            {...rest}
-          />
+          <InputField {...rest} />
         </ContainerInput>
         {error ? (
           <ContainerError>
             <TextError>{error}</TextError>
           </ContainerError>
         ) : null}
-        {/* {isSlide &&  
+        {isSlide && (
           <Slider
-            style={{ width: "100%", height: 40 }}
+            style={{ width: "100%", height: 10 }}
             minimumTrackTintColor="#FF5531"
             maximumTrackTintColor="#C8C8C8"
             thumbTintColor="#FF5531"
-            minimumValue={0}
-            maximumValue={1}
+            maximumValue={2000}
+            step={1}
             onValueChange={sliderValue}
+            value={inputValue}
           />
-        } */}
-       
+        )}
       </Container>
     </>
   );

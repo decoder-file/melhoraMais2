@@ -1,13 +1,11 @@
 import styled from "styled-components/native";
-// import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
-import { PropsShowResult } from "./index";
-
-export const Container = styled.View<PropsShowResult>`
-  width: ${({ isWidth }) => (isWidth ? 100 : 45)}%;
+export const Container = styled.View`
+  width: 100%;
+  margin-top: 20px;
 `;
 
-export const Content = styled.View<PropsShowResult>`
+export const Content = styled.View`
   width: 100%;
   height: 51px;
   background: ${({ theme }) => theme.COLORS.WHITE};
@@ -16,8 +14,6 @@ export const Content = styled.View<PropsShowResult>`
   border-color: #ebebec;
   flex-direction: row;
   align-items: center;
-
-  margin-bottom: ${({ marginBottom }) => (marginBottom ? marginBottom : 0)}px;
 `;
 
 export const Text = styled.Text`
@@ -25,9 +21,8 @@ export const Text = styled.Text`
   font-size: 16px;
 `;
 
-export const Title = styled.Text<PropsShowResult>`
+export const Title = styled.Text`
   font-size: 16px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
-  margin-bottom: 2px;
-  margin-top: ${({ marginTop }) => (marginTop ? marginTop : 0)}px;
+  margin-bottom: 10px;
 `;
