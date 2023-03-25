@@ -3,10 +3,9 @@
     "name": "melhoraMais2.0",
     "slug": "melhoraMais2.0",
     "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "plugins": ["@morrowdigital/watermelondb-expo-plugin",
+    "assetBundlePatterns": ["**/*"],
+    "plugins": [
+      "@morrowdigital/watermelondb-expo-plugin",
       [
         "expo-build-properties",
         {
@@ -14,7 +13,13 @@
             "kotlinVersion": "1.6.10"
           }
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
       ]
-  ]
+    ]
   }
 }

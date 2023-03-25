@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-import * as Location from "expo-location";
 import { showMessage } from "react-native-flash-message";
 import { ScrollView, View } from "react-native";
 
 import { useNetInfo } from "@react-native-community/netinfo";
 import { Ionicons } from "@expo/vector-icons";
-
-import axios from "axios";
-import moment from "moment";
+import { StackScreenProps } from "@react-navigation/stack";
 
 import { CardCalculation } from "../../components/CardCalculation";
 import { WelcomeHeader } from "../../components/WelcomeHeader";
+import { useAuth } from "../../hooks/auth";
+import { api } from "../../services/api";
+import { RootStackParamList } from "../../routes/app.routes";
+import { WeatherForecast } from "@components/WeatherForecast";
 
 import {
   Container,
@@ -19,27 +20,11 @@ import {
   TitleButtonAddNewCalculation,
   ContainerCard,
   TitleContainerCard,
-  ContainerTemperature,
-  LoadingHourly,
-  TextLoadingHourly,
   NotCalculations,
   ModalExit,
   ModalDeleteCalculation,
+  ModalAboutLocation,
 } from "./styles";
-
-import { Temperature } from "../../components/Temperature";
-
-import { useAuth } from "../../hooks/auth";
-import { api } from "../../services/api";
-import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "../../routes/app.routes";
-
-interface CalculationsProps {
-  id: string;
-  tag: string;
-  title: string;
-  description: string;
-}
 
 interface DashboardProps
   extends StackScreenProps<RootStackParamList, "Dashboard"> {}
@@ -48,45 +33,17 @@ export function Dashboard({ navigation }: DashboardProps) {
   const { user, signOut } = useAuth();
   const netInfo = useNetInfo();
 
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [hourly, setHourly] = useState<any[]>([]);
-  const [loadingHourly, setLoadingHourly] = useState(false);
   const [calculations, setCalculations] = useState<any[]>([]);
-  const [locationLat, setLocationLat] = useState(0);
-  const [locationLon, setLocationLon] = useState(0);
-  const [errorMsg, setErrorMsg] = useState("");
   const [currentCalculation, setCurrentCalculation] = useState("");
   const [loadingSignOut, setLoadingSignOut] = useState(false);
   const [modal, setModal] = useState(false);
   const [modalDeleteCalculation, setModalDeleteCalculation] = useState(false);
   const [loadingDeleteCalculation, setLoadingDeleteCalculation] =
     useState(false);
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
-      }
-
-      let test = await Location.getCurrentPositionAsync({});
-      setLocationLat(test.coords.latitude);
-      setLocationLon(test.coords.longitude);
-    })();
-  }, []);
-
-  const weatherApi = axios.create({
-    baseURL: "https://api.openweathermap.org/data/3.0",
-  });
-
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
+  const [modalAboutLocation, setModalAboutLocation] = useState(false);
 
   const selectCalculation = (id: string) => {
     setCurrentCalculation(id);
-    toggleModal();
   };
 
   const deleteCalculation = async () => {
@@ -95,7 +52,6 @@ export function Dashboard({ navigation }: DashboardProps) {
     api
       .delete(`/calculations/${value}`)
       .then((response) => {
-        toggleModal();
         if (response.status) {
           showMessage({
             message: "Cálculo excluído com sucesso!",
@@ -118,34 +74,6 @@ export function Dashboard({ navigation }: DashboardProps) {
       });
   };
 
-  const weatherForecast = async () => {
-    setLoadingHourly(true);
-    weatherApi
-      .get(
-        `/onecall?lat=${locationLat}&lon=${locationLon}&&lang=pt_br&exclude=hourly&units=metric&appid=e60bbbd8743dbd96687926fd211c16f2`
-      )
-      .then((response) => {
-        setHourly(response.data.daily);
-        setLoadingHourly(false);
-      })
-      .catch((err) => {
-        showMessage({
-          message: "Error!",
-          description:
-            "Ocorreu um erro inesperado para carregar a previsão do tempo",
-          type: "danger",
-          icon: "danger",
-        });
-        setLoadingHourly(false);
-      });
-  };
-
-  const convertDate = (timestamp: number) => {
-    var currentDate = new Date(timestamp * 1000);
-    const convertedDate = moment(currentDate).format("DD/MM");
-    return convertedDate.toString();
-  };
-
   const lookingSavedCalculations = async () => {
     api
       .get("/calculations")
@@ -162,43 +90,11 @@ export function Dashboard({ navigation }: DashboardProps) {
       });
   };
 
-  const loadWeatherForecast = () => {
-    if (errorMsg.length !== 0) {
-      return (
-        <TextLoadingHourly>
-          A permissão para acessar a localização foi negada
-        </TextLoadingHourly>
-      );
-    } else if (loadingHourly) {
-      return (
-        <>
-          <LoadingHourly size="small" color="#FEC321" />
-          <TextLoadingHourly>Carregando Previsão do tempo</TextLoadingHourly>
-        </>
-      );
-    } else if (hourly) {
-      return hourly.map((e) => (
-        <Temperature
-          key={e.dt}
-          date={convertDate(e.dt)}
-          temp={e.temp.day}
-          icon={e.weather.main}
-        />
-      ));
-    } else {
-      return "";
-    }
-  };
-
   const handleSignOut = async () => {
     setLoadingSignOut(true);
     await signOut();
     setLoadingSignOut(false);
   };
-
-  useEffect(() => {
-    weatherForecast();
-  }, []);
 
   useEffect(() => {
     lookingSavedCalculations();
@@ -212,7 +108,10 @@ export function Dashboard({ navigation }: DashboardProps) {
       />
       <Container>
         <View>
-          <ContainerTemperature>{loadWeatherForecast()}</ContainerTemperature>
+          <WeatherForecast
+            onPressModalAboutLocation={() => setModalAboutLocation(true)}
+            key=""
+          />
         </View>
         <ButtonAddNewCalculation
           onPress={() => navigation.navigate("RegisterCalculation")}
@@ -277,6 +176,14 @@ export function Dashboard({ navigation }: DashboardProps) {
         enabledConfirmButton={!loadingDeleteCalculation}
         loadingConfirmButton={loadingDeleteCalculation}
         enabledCancelButton={!loadingDeleteCalculation}
+      />
+
+      <ModalAboutLocation
+        show={modalAboutLocation}
+        close={() => setModalAboutLocation(false)}
+        message="Temos uma ótima previsão do tempo para você, mas para isso precisamos que você nos conceda acesso à sua localização. Por favor, permita o acesso à sua localização para que possamos exibir a previsão do tempo mais precisa para a sua região. Obrigado!"
+        alertModal
+        onPressConfirmButton={() => setModalAboutLocation(false)}
       />
     </>
   );

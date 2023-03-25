@@ -31,22 +31,6 @@ export const TitleContainerCard = styled.Text`
   margin-bottom: 20px;
 `;
 
-export const ContainerTemperature = styled.ScrollView.attrs({
-  horizontal: true,
-  showsHorizontalScrollIndicator: false,
-})`
-  width: 100%;
-`;
-
-export const LoadingHourly = styled.ActivityIndicator``;
-
-export const TextLoadingHourly = styled.Text`
-  font-size: 12px;
-  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
-  color: ${({ theme }) => theme.COLORS.GRAY_700};
-  margin-left: 10px;
-`;
-
 export const NotCalculations = styled.Text`
   font-size: 12px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
@@ -59,3 +43,5 @@ export const NotCalculations = styled.Text`
 export const ModalExit = styled(Modal)``;
 
 export const ModalDeleteCalculation = styled(Modal)``;
+
+export const ModalAboutLocation = styled(Modal)``;

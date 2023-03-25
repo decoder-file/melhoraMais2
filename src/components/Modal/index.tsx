@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
-import {
-  Animated,
-  Dimensions,
-} from "react-native";
+import { Animated, Dimensions } from "react-native";
 
 const { height } = Dimensions.get("window");
 
 interface ModalProps {
   close: () => void;
   show: boolean;
-  cancelButtonText: string;
-  confirmButtonText: string;
+  cancelButtonText?: string;
+  confirmButtonText?: string;
   onPressConfirmButton: () => void;
   message: string;
-  loadingConfirmButton: boolean;
-  enabledConfirmButton: boolean;
-  enabledCancelButton: boolean;
+  loadingConfirmButton?: boolean;
+  enabledConfirmButton?: boolean;
+  enabledCancelButton?: boolean;
+  alertModal?: boolean;
 }
 
 import * as S from "./styles";
@@ -29,7 +27,8 @@ const Modal = ({
   message,
   loadingConfirmButton,
   enabledConfirmButton,
-  enabledCancelButton
+  enabledCancelButton,
+  alertModal,
 }: ModalProps) => {
   const [state, setState] = useState({
     opacity: new Animated.Value(0),
@@ -105,13 +104,24 @@ const Modal = ({
 
         <S.Text>{message}</S.Text>
 
-        <S.Btn
-          title={confirmButtonText}
-          onPress={onPressConfirmButton}
-          loading={loadingConfirmButton}
-          enabled={enabledConfirmButton}
-        />
-        <S.CancelBtnText onPress={close} enabled={enabledCancelButton} title={cancelButtonText} light />
+        {alertModal ? (
+          <S.Btn title="Ok" onPress={onPressConfirmButton} />
+        ) : (
+          <>
+            <S.Btn
+              title={confirmButtonText || ""}
+              onPress={onPressConfirmButton}
+              loading={loadingConfirmButton}
+              enabled={enabledConfirmButton}
+            />
+            <S.CancelBtnText
+              onPress={close}
+              enabled={enabledCancelButton}
+              title={cancelButtonText || ""}
+              light
+            />
+          </>
+        )}
       </S.Modal>
     </S.Container>
   );
