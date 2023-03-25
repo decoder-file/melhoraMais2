@@ -67,10 +67,6 @@ export function RegisterCalculation() {
       });
   };
 
-  const submitCalculations = async (value: object) => {
-    api.post("/calculations", value);
-  };
-
   useEffect(() => {
     tagSearch();
   }, [listTag]);
@@ -139,7 +135,7 @@ export function RegisterCalculation() {
         returnOnCapital: returnOnCapital.toString(),
         result: result.toString(),
       };
-      await submitCalculations(sendValue);
+      await api.post("/calculations", sendValue);
       showMessage({
         message: "Sucesso!",
         description: "Cálculo criado com sucesso!",
@@ -397,7 +393,11 @@ export function RegisterCalculation() {
             label={priceAtProduced}
             isMoney
           />
-          <ShowResult title="Valor de compra(R$)" label={purchasePrice} />
+          <ShowResult
+            title="Valor de compra(R$)"
+            label={purchasePrice}
+            isMoney
+          />
 
           <ShowResult title="Quantidade de @ Produzidas" label={bash} />
           <ShowResult title="Preço de venda(R$)" label={description} isMoney />
