@@ -1,15 +1,14 @@
 import React, { useState } from "react";
+import * as Yup from "yup";
 
 import { ScrollView, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { showMessage } from "react-native-flash-message";
 
-import { useFormik } from "formik";
-import * as Yup from "yup";
-
 import { Header } from "../../components/Header";
 import { Input } from "../../components/Input";
 import { Button } from "../../components/Button";
+import { api } from "../../services/api";
 
 import {
   Container,
@@ -19,65 +18,71 @@ import {
   TagSelect,
   ButtonSave,
 } from "./styles";
-import {api} from "../../services/api";
-
-const CreateTagSchema = Yup.object().shape({
-  title: Yup.string().min(1).required("Campo senha obrigatório"),
-});
 
 export function CreateTag() {
   const navigation = useNavigation();
 
   const [tagSelect, setTagSelect] = useState("");
+  const [title, setTitle] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleTag = (color: string) => {
     setTagSelect(color);
   };
 
-  const submitTag = async (value: object) => {
-    api.post("/tag-calculations", value);
-  };
+  async function handleSubmit() {
+    setLoading(true);
+    if (tagSelect.length === 0) {
+      showMessage({
+        message: "Erro ao criar tag",
+        description: "É obrigatorio selecionar uma cor",
+        type: "danger",
+        icon: "danger",
+      });
+      setLoading(false);
+      return;
+    }
+    try {
+      const schema = Yup.object().shape({
+        title: Yup.string().required("Campo titulo é obrigatório"),
+      });
 
-  const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
-    useFormik({
-      validationSchema: CreateTagSchema,
-      initialValues: { title: "" },
-
-      onSubmit: async (v) => {
-        try {
-          if (!tagSelect) {
-            showMessage({
-              message: "Erro ao criar tag",
-              description: "É obrigatorio selecionar uma cor",
-              type: "danger",
-              icon: "danger",
-            });
-          } else {
-            const sendValue = { title: v.title, color: tagSelect };
-            await submitTag(sendValue);
-            navigation.navigate("RegisterCalculation");
-            showMessage({
-              message: "Sucesso!",
-              description: "Tag criada com sucesso!",
-              type: "success",
-              icon: "success",
-            });
-          }
-        } catch (err: any) {
-          showMessage({
-            message: "Erro ao criar tag",
-            description:
-              "Ocorreu um erro inesperado. Tente novamente mais tarde!",
-            type: "danger",
-            icon: "danger",
-          });
-        }
-      },
-    });
+      await schema.validate({
+        title,
+      });
+      await api.post("/tag-calculations", { title: title, color: tagSelect });
+      showMessage({
+        message: "Sucesso!",
+        description: "Tag criada com sucesso!",
+        type: "success",
+        icon: "success",
+      });
+      navigation.navigate("RegisterCalculation");
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        showMessage({
+          message: "Ops!",
+          description: error.message,
+          type: "danger",
+        });
+        setLoading(false);
+      } else {
+        showMessage({
+          message: "Erro ao criar tag",
+          description:
+            "Ocorreu um erro inesperado. Tente novamente mais tarde!",
+          type: "danger",
+          icon: "danger",
+        });
+        setLoading(false);
+      }
+    }
+    setLoading(false);
+  }
 
   return (
     <>
-      <Header title="Personalizar etiqueta " />
+      <Header title="Criar etiqueta personalizada" />
       <StatusBar backgroundColor="#FF5531" />
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -90,12 +95,8 @@ export function CreateTag() {
             autoCorrect={false}
             autoCapitalize="none"
             keyboardAppearance="dark"
-            onChangeText={handleChange("title")}
-            onBlur={handleBlur("title")}
-            error={errors.title}
-            touched={touched.title}
-            onSubmitEditing={() => handleSubmit()}
-            value={values.title}
+            onChangeText={setTitle}
+            value={title}
           />
 
           <ContainerTag>
@@ -158,7 +159,12 @@ export function CreateTag() {
           </ContainerTag>
 
           <ButtonSave>
-            <Button title="Salvar" onPress={() => handleSubmit()} />
+            <Button
+              title="Criar"
+              onPress={handleSubmit}
+              enabled={!loading}
+              loading={loading}
+            />
           </ButtonSave>
         </Container>
       </ScrollView>

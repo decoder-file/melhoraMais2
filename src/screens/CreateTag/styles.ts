@@ -1,4 +1,3 @@
-// import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
 
 interface TagProps {
@@ -8,8 +7,9 @@ interface TagProps {
 
 export const Container = styled.View`
   flex: 1;
-  padding: 2px;
+  padding: 0 24px;
   background-color: ${({ theme }) => theme.COLORS.GRAY_50};
+  margin-top: 30px;
 `;
 
 export const ContainerTag = styled.View``;
@@ -35,7 +35,7 @@ export const CardTag = styled.TouchableOpacity<TagProps>`
 export const TagSelect = styled.View`
   flex-direction: row;
   flex-direction: row;
-  gap: 10%;
+  gap: 10px;
 `;
 
 export const ButtonSave = styled.View`

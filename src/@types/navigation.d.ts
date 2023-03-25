@@ -7,6 +7,7 @@ export declare global {
       tokenSending: undefined;
       Dashboard: undefined;
       CreateTag: undefined;
+      RegisterCalculation: undefined;
     }
   }
 }
