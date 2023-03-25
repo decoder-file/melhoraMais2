@@ -1,7 +1,6 @@
-// import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Alert } from "react-native";
-import { useAuth } from "../../hooks/auth";
+
+import { useNavigation } from "@react-navigation/native";
 
 import {
   Container,
@@ -19,13 +18,15 @@ interface WelcomeHeaderProps {
 }
 
 export function WelcomeHeader({ name, signOut }: WelcomeHeaderProps) {
+  const navigation = useNavigation();
+  
   return (
     <Container>
       <ContainerName>
         <Welcome>Bem-vindo,</Welcome>
         <ButtonName
           activeOpacity={0.8}
-          /* onPress={() => navigation.navigate("Profile")}*/
+       onPress={() => navigation.navigate("Profile")}
         >
           <Name>{name}</Name>
         </ButtonName>

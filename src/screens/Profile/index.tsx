@@ -1,81 +1,88 @@
-import React from "react";
+import React, { useState } from "react";
+import * as Yup from "yup";
 
 import { ScrollView, StatusBar } from "react-native";
 import { showMessage } from "react-native-flash-message";
-
 import { useNavigation } from "@react-navigation/native";
+import { User, MapPin } from "phosphor-react-native";
 
-import { useFormik } from "formik";
-import * as Yup from "yup";
-
-import { Input } from "../../components/Input";
-import { Button } from "../../components/Button";
 import { Header } from "../../components/Header";
-
-import {api} from "../../services/api";
-
-import { Container, ContainerInput, Separator } from "./styles";
+import { api } from "../../services/api";
 import { useAuth } from "../../hooks/auth";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import { InputEmail } from "@components/InputEmail";
+import { PasswordInput } from "@components/PasswordInput";
 
-const RegistrationSchema = Yup.object().shape({
-  name: Yup.string().min(2).required("Campo nome obrigatório"),
-  email: Yup.string()
-    .email("Email inválido")
-    .required("Campo e-mail obrigatório"),
-  location: Yup.string().min(2).required("Campo localização obrigatório"),
-  password: Yup.string().min(4).required("Campo senha obrigatório"),
-});
+import {
+  ButtonHandleSubmit,
+  Container,
+  ContainerConfirmPassword,
+  ContainerInput,
+  Separator,
+  Title,
+  TitleConfirmPassword,
+} from "./styles";
 
 export function Profile() {
   const navigation = useNavigation();
-  const { user } = useAuth();
+  const { user, updatedUser } = useAuth();
 
-  const { handleChange, handleSubmit, handleBlur, values, errors, touched } =
-    useFormik({
-      validationSchema: RegistrationSchema,
-      initialValues: {
-        name: user.name,
+  const [name, setName] = useState(user.name);
+  const [password, setPassword] = useState("");
+  const [location, setLocation] = useState(user.location || "");
+
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit() {
+    setLoading(true);
+    try {
+      const schema = Yup.object().shape({
+        name: Yup.string().required("Campo nome obrigatório"),
+        location: Yup.string(),
+        password: Yup.string().required("Informe sua senha para avançar"),
+      });
+
+      await schema.validate({ email: "", name, location, password });
+      const teste = await api.patch(`/users/${user.user_id}`, {
+        name,
         email: user.email,
-        location: user.location,
-        password: "",
-      },
-
-      onSubmit: async (v) => {
-        try {
-          await api.patch(`/users/${user.id}`, v);
-          showMessage({
-            message: "Alteração realizada com sucesso!",
-            description: "As informações de cadastro foram atualizadas",
-            type: "success",
-            icon: "success",
-          });
-          const updatedUer = {
-            email: values.email,
-            id: user.id,
-            location: values.location,
-            name: values.name,
-          };
-
-          // await AsyncStorage.removeItem("@melhoraMaisApp:use");
-
-          // await AsyncStorage.setItem(
-          //   "@melhoraMaisApp:use",
-          //   JSON.stringify(updatedUer)
-          // );
-
-          navigation.goBack();
-        } catch (err: any) {
-          showMessage({
-            message: "Erro na atualização de cadastro",
-            description:
-              "Ocorreu um erro inesperado. Tente novamente mais tarde!",
-            type: "danger",
-            icon: "danger",
-          });
-        }
-      },
-    });
+        location,
+        password,
+      });
+      await updatedUser({
+        id: user.id,
+        user_id: user.user_id,
+        name: name,
+        email: user.email,
+        access_token: user.access_token,
+      });
+      showMessage({
+        message: "Alteração realizada com sucesso!",
+        description: "As informações de cadastro foram atualizadas",
+        type: "success",
+        icon: "success",
+      });
+      navigation.navigate("Dashboard");
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        showMessage({
+          message: "Opa",
+          description: error.message,
+          type: "danger",
+        });
+        setLoading(false);
+      } else {
+        showMessage({
+          message: "Erro na atualização de cadastro",
+          description:
+            "Ocorreu um erro inesperado. Tente novamente mais tarde!",
+          type: "danger",
+          icon: "danger",
+        });
+        setLoading(false);
+      }
+    }
+    setLoading(false);
+  }
 
   return (
     <>
@@ -86,56 +93,44 @@ export function Profile() {
         style={{ backgroundColor: "#FCF9F2" }}
       >
         <Container>
+          <Title>Informação do Perfil</Title>
           <ContainerInput>
-            <Input
-              title="Nome"
-              placeholder="Informe seu nome"
-              autoCapitalize="none"
+            <InputEmail
+              placeholder={user.name}
               autoCorrect={false}
-              keyboardAppearance="dark"
-              onChangeText={handleChange("name")}
-              onBlur={handleBlur("name")}
-              error={errors.name}
-              touched={touched.name}
-              value={values.name}
+              onChangeText={setName}
+              value={name}
+              returnKeyType="next"
+              icon={<User />}
             />
             <Separator />
-            <Input
-              title="Email "
-              placeholder="Informe seu E-mail "
-              autoCapitalize="none"
+            <InputEmail
+              placeholder={user.location}
               autoCorrect={false}
-              keyboardType="email-address"
-              keyboardAppearance="dark"
-              autoComplete="email"
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              error={errors.email}
-              touched={touched.email}
-              value={values.email}
-            />
-            <Separator />
-            <Input
-              title="Senha"
-              secureTextEntry
-              placeholder="Informe sua senha"
-              autoCorrect={false}
-              autoComplete="password"
-              autoCapitalize="none"
-              keyboardAppearance="dark"
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              error={errors.password}
-              touched={touched.password}
-              onSubmitEditing={() => handleSubmit()}
-              value={values.password}
+              onChangeText={setLocation}
+              value={location}
+              returnKeyType="next"
+              icon={<MapPin />}
             />
           </ContainerInput>
 
-          <Button
+          <ContainerConfirmPassword>
+            <TitleConfirmPassword>
+              Informe sua senha para alterar as informações
+            </TitleConfirmPassword>
+            <PasswordInput
+              placeholder="Informe sua senha"
+              onChangeText={setPassword}
+              returnKeyType="next"
+              value={password}
+            />
+          </ContainerConfirmPassword>
+
+          <ButtonHandleSubmit
             title="Salvar"
-            marginTop={30}
-            onPress={() => handleSubmit()}
+            onPress={handleSubmit}
+            enabled={!loading}
+            loading={loading}
           />
         </Container>
       </ScrollView>
