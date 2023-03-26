@@ -4,8 +4,10 @@ import { Button } from "../../components/Button";
 
 export const Container = styled.View`
   flex: 1;
-  padding: 2px;
+  padding: 0 24px;
+  margin-top: 30px;
   background-color: ${({ theme }) => theme.COLORS.GRAY_50};
+  margin-bottom:60px;
 `;
 
 export const ContainerInputSlider = styled.View`

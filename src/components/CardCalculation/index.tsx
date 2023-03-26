@@ -95,7 +95,13 @@ export function CardCalculation({
         <Title>{title}</Title>
 
         <Description>
-          <TextBold>Total: </TextBold>R${parseInt(result)}
+          <TextBold>Total: </TextBold>
+          {isNaN(parseInt(result))
+            ? 0
+            : parseInt(result).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+              })}
         </Description>
 
         <CreationData>

@@ -9,7 +9,7 @@ import { Tag } from "../../components/Tag";
 
 import { StackScreenProps } from "@react-navigation/stack";
 
-import {api} from "../../services/api";
+import { api } from "../../services/api";
 
 import { RootStackParamList } from "../../routes/app.routes";
 
@@ -116,7 +116,7 @@ export function RegisterCalculationEdit({
         style={{ backgroundColor: "#FCF9F2" }}
       >
         <Container>
-          <TitleTag>Etiquetas</TitleTag>
+          <TitleTag>Etiqueta:</TitleTag>
           <ContainerTag>
             {selectTagList && (
               <Tag title={selectTagList.title} color={selectTagList.color} />
@@ -128,96 +128,74 @@ export function RegisterCalculationEdit({
             value={listCalculations?.title}
           />
 
-          <ContainerInputSlider>
-            <InputSlider
-              title="Peso de entrada(Kg)"
-              editable={false}
-              value={listCalculations?.entrance_weight}
-            />
-            <InputSlider
-              title="Custo diario(R$)"
-              editable={false}
-              value={listCalculations?.daily_cost}
-            />
-          </ContainerInputSlider>
+          <ShowResult
+            title="Peso de entrada(Kg)"
+            label={parseFloat(listCalculations?.entrance_weight)}
+          />
+          <ShowResult
+            title="Custo diario(R$)"
+            label={parseFloat(listCalculations?.daily_cost)}
+            isMoney
+          />
 
-          <ContainerInputSlider>
-            <InputSlider
-              title="Preço @ compra(R$)"
-              editable={false}
-              value={listCalculations?.sale_price}
-            />
-            <InputSlider
-              title="GMD(g)"
-              editable={false}
-              value={listCalculations?.gmd}
-            />
-          </ContainerInputSlider>
+          <ShowResult
+            title="Preço @ compra(R$)"
+            label={parseFloat(listCalculations?.sale_price)}
+            isMoney
+          />
+          <ShowResult
+            title="GMD(g)"
+            label={parseFloat(listCalculations?.gmd)}
+          />
 
-          <ContainerInputSlider>
-            <InputSlider
-              title="Tempo Permanência(dias)"
-              editable={false}
-              value={listCalculations?.length_of_stay}
-            />
-            <InputSlider
-              title="Peso de saída(Kg)"
-              editable={false}
-              value={listCalculations?.output_weight}
-            />
-          </ContainerInputSlider>
+          <ShowResult
+            title="Tempo Permanência(dias)"
+            label={parseFloat(listCalculations?.length_of_stay)}
+          />
+          <ShowResult
+            title="Peso de saída(Kg)"
+            label={parseFloat(listCalculations?.output_weight)}
+          />
 
-          <ContainerInputSlider>
-            <InputSlider
-              title="RC inicial(%)"
-              editable={false}
-              value={listCalculations?.rc_initial}
-            />
-            <InputSlider
-              title="RC final(%)"
-              editable={false}
-              value={listCalculations?.rc_end}
-            />
-          </ContainerInputSlider>
+          <ShowResult
+            title="RC inicial(%)"
+            label={parseFloat(listCalculations?.rc_initial)}
+          />
+          <ShowResult
+            title="RC final(%)"
+            label={parseFloat(listCalculations?.rc_end)}
+          />
 
-          <ContainerInputSlider>
-            <InputSlider
-              title="Preço @ produzida(R$)"
-              editable={false}
-              value={listCalculations?.produced_price}
-            />
-            <InputSlider
-              title="Valor de compra(R$)"
-              editable={false}
-              value={listCalculations?.purchase_price}
-            />
-          </ContainerInputSlider>
+          <ShowResult
+            title="Preço @ produzida(R$)"
+            label={parseFloat(listCalculations?.produced_price)}
+            isMoney
+          />
+          <ShowResult
+            title="Valor de compra(R$)"
+            label={parseFloat(listCalculations?.purchase_price)}
+            isMoney
+          />
 
-          <ContainerInputSlider>
-            <InputSlider
-              title="Quantidade de @ Produzidas"
-              editable={false}
-              value={listCalculations?.bash}
-            />
-            <InputSlider
-              title="Preço @ de venda(R$)"
-              editable={false}
-              value={listCalculations?.sale_price}
-            />
-          </ContainerInputSlider>
+          <ShowResult
+            title="Quantidade de @ Produzidas"
+            label={parseFloat(listCalculations?.bash)}
+          />
+          <ShowResult
+            title="Preço @ de venda(R$)"
+            label={parseFloat(listCalculations?.sale_price)}
+            isMoney
+          />
 
-          <ContainerInputSlider>
-            <ShowResult
-              title="Rendimento do capital(%)"
-              isWidth
-              label={listCalculations?.return_on_capital}
-            />
-          </ContainerInputSlider>
+          <ShowResult
+            title="Rendimento do capital(%)"
+            label={parseFloat(listCalculations?.return_on_capital)}
+          />
 
-          <Input
+          <ShowResult
             title="Resultado"
-            editable={false}
-            value={listCalculations?.result}
+            label={parseFloat(listCalculations?.result)}
+            isMoney
           />
         </Container>
       </ScrollView>
