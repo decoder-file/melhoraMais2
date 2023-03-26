@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { showMessage } from "react-native-flash-message";
-import { ScrollView, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 import { useNetInfo } from "@react-native-community/netinfo";
 import { Ionicons } from "@expo/vector-icons";
@@ -90,6 +90,14 @@ export function Dashboard({ navigation }: DashboardProps) {
       });
   };
 
+  const EmptyListComponent = () => {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <NotCalculations>Não existe cálculos salvos</NotCalculations>
+      </View>
+    );
+  };
+
   const handleSignOut = async () => {
     setLoadingSignOut(true);
     await signOut();
@@ -124,29 +132,30 @@ export function Dashboard({ navigation }: DashboardProps) {
 
         <ContainerCard>
           <TitleContainerCard>Cálculos salvos</TitleContainerCard>
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
+
+          <FlatList
             showsVerticalScrollIndicator={false}
-          >
-            {calculations.length > 0 ? (
-              calculations.map((e) => (
-                <CardCalculation
-                  clickCalculationCard={() =>
-                    navigation.navigate("RegisterCalculationEdit", { id: e.id })
-                  }
-                  deleteCalculation={() => {
-                    selectCalculation(e.id), setModalDeleteCalculation(true);
-                  }}
-                  key={e.id}
-                  title={e.title}
-                  result={e.result}
-                  tagId={e.tag}
-                />
-              ))
-            ) : (
-              <NotCalculations>Não existe cálculos salvos</NotCalculations>
+            data={calculations}
+            renderItem={({ item }) => (
+              <CardCalculation
+                clickCalculationCard={() =>
+                  navigation.navigate("RegisterCalculationEdit", {
+                    id: item.id,
+                  })
+                }
+                deleteCalculation={() => {
+                  selectCalculation(item.id), setModalDeleteCalculation(true);
+                }}
+                key={item.id}
+                title={item.title}
+                result={item.result}
+                tagId={item.tag}
+              />
             )}
-          </ScrollView>
+            keyExtractor={(item) => item.id.toString()}
+            initialNumToRender={10}
+            ListEmptyComponent={EmptyListComponent}
+          />
         </ContainerCard>
       </Container>
 

@@ -1,4 +1,3 @@
-// import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
 import { Button } from "../../components/Button";
 

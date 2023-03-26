@@ -5,6 +5,7 @@ export const Container = styled.View`
   flex: 1;
   padding: 24px;
   background-color: ${({ theme }) => theme.COLORS.GRAY_50};
+  padding-bottom: 100px;
 `;
 
 export const ButtonAddNewCalculation = styled.TouchableOpacity`
