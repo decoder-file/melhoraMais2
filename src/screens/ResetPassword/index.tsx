@@ -51,10 +51,9 @@ export function ResetPassword() {
     setLoading(true);
     try {
       const schema = Yup.object().shape({
-        email: Yup.string()
-          .email("Email inválido")
-          .required("Campo e-mail é obrigatório"),
-        password: Yup.string().required("Campo token é obrigatório"),
+        token: Yup.string()
+          .required("Campo token é obrigatório"),
+        password: Yup.string().required("Campo senha é obrigatório"),
       });
 
       await schema.validate({ token, password });
@@ -65,7 +64,7 @@ export function ResetPassword() {
         type: "success",
         icon: "success",
       });
-      navigation.goBack();
+      navigation.navigate('login');
       setLoading(false);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
@@ -129,7 +128,7 @@ export function ResetPassword() {
               />
               <Separator />
               <PasswordInput
-                placeholder="Confirme sua senha"
+                placeholder="Alterar senha"
                 onChangeText={setConfirmPassword}
                 value={confirmPassword}
               />
