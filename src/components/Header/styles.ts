@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import styled from "styled-components/native";
 
 export const Container = styled.View`
@@ -11,14 +13,22 @@ export const Container = styled.View`
   justify-content: space-between;
   padding-left: 20px;
   padding-right: 20px;
-  padding-bottom: 20px;
-  padding-top: 50px;
+  padding-bottom: ${Platform.OS === "ios" ? 0 : 20}px;
+  padding-top: 10px;
 `;
 
 export const Title = styled.Text`
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
-  font-size: 16px;
+  font-size: 18px;
   color: ${({ theme }) => theme.COLORS.WHITE};
 `;
 
 export const ButtonExit = styled.TouchableOpacity``;
+
+export const SafeArea = styled(SafeAreaView)`
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  /* background-color: blue; */
+`

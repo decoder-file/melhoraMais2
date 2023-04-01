@@ -1,8 +1,12 @@
 import styled from "styled-components/native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Platform } from "react-native";
+
 
 export const Container = styled.View`
   width: 100%;
-  border-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
   align-items: center;
   background-color: ${({ theme }) => theme.COLORS.SECONDARY};
   flex-direction: row;
@@ -10,8 +14,8 @@ export const Container = styled.View`
   justify-content: space-between;
   padding-left: 20px;
   padding-right: 20px;
-  padding-bottom: 20px;
-  padding-top: 50px;
+  padding-bottom: ${Platform.OS === "ios" ? 0 : 20}px;
+  padding-top: 10px;
 `;
 
 export const ContainerName = styled.View``;
@@ -19,7 +23,6 @@ export const ContainerName = styled.View``;
 export const Welcome = styled.Text`
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   font-size: 14px;
-  margin-bottom: 0.5px;
   color: ${({ theme }) => theme.COLORS.WHITE};
 `;
 
@@ -42,3 +45,10 @@ export const TitleExit = styled.Text`
   font-size: 16px;
   color: ${({ theme }) => theme.COLORS.WHITE};
 `;
+
+export const SafeArea = styled(SafeAreaView)`
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+`

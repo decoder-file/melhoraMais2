@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { showMessage } from "react-native-flash-message";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, View } from "react-native";
 
 import { useNetInfo } from "@react-native-community/netinfo";
 import { Ionicons } from "@expo/vector-icons";

@@ -64,7 +64,7 @@ export function InputSlider({
         ) : null}
         {isSlide && (
           <Slider
-            style={{ width: "100%", height: 10 }}
+            style={{ width: "100%", height: 10, marginTop: 10 }}
             minimumTrackTintColor="#FF5531"
             maximumTrackTintColor="#C8C8C8"
             thumbTintColor="#FF5531"

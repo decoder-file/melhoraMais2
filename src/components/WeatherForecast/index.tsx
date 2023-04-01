@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import axios from "axios";
 import Geolocation from "@react-native-community/geolocation";
-import { PermissionsAndroid, Platform, Text } from "react-native";
+import { PermissionsAndroid, Platform } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { BorderlessButton } from "react-native-gesture-handler";
 
