@@ -30,5 +30,18 @@ export const SafeArea = styled(SafeAreaView)`
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  /* background-color: blue; */
+`
+
+export const ContainerDisconnectionAlert = styled.View`
+  flex-direction: row;
+  align-items: center;
+  padding: 15px;
+  background-color: #FF0000;
+`
+
+export const TextDisconnectionAlert = styled.Text`
+  font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
+  font-size: ${({ theme }) => theme.FONT_SIZE.SM}px;
+  color: ${({ theme }) => theme.COLORS.WHITE};
+  margin-left: 10px;
 `

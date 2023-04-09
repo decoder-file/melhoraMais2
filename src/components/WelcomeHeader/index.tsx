@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Warning } from "phosphor-react-native";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 import {
   Container,
@@ -11,7 +13,9 @@ import {
   ButtonExit,
   TitleExit,
   ButtonName,
-  SafeArea
+  SafeArea,
+  ContainerDisconnectionAlert,
+  TextDisconnectionAlert,
 } from "./styles";
 
 interface WelcomeHeaderProps {
@@ -21,6 +25,17 @@ interface WelcomeHeaderProps {
 
 export function WelcomeHeader({ name, signOut }: WelcomeHeaderProps) {
   const navigation = useNavigation();
+  const netInfo = useNetInfo();
+
+  const [disconnectionAlert, setDisconnectionAlert] = useState(false);
+
+  useEffect(() => {
+    if (netInfo.isConnected) {
+      setDisconnectionAlert(true);
+    } else {
+      setDisconnectionAlert(false);
+    }
+  }, [netInfo.isConnected]);
 
   return (
     <>
@@ -42,6 +57,14 @@ export function WelcomeHeader({ name, signOut }: WelcomeHeaderProps) {
           </ButtonExit>
         </SafeArea>
       </Container>
+      {!disconnectionAlert && (
+        <ContainerDisconnectionAlert>
+          <Warning size={20} color="#fff" />
+          <TextDisconnectionAlert>
+            Você está sem conexão com a internet.
+          </TextDisconnectionAlert>
+        </ContainerDisconnectionAlert>
+      )}
     </>
   );
 }
