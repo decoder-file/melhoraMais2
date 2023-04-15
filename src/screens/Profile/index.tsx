@@ -17,6 +17,9 @@ import {
   Container,
   ContainerConfirmPassword,
   ContainerInput,
+  DeleteAccountButton,
+  DeleteAccountButtonText,
+  ModalDeleteAccount,
   Separator,
   Title,
   TitleConfirmPassword,
@@ -24,13 +27,15 @@ import {
 
 export function Profile() {
   const navigation = useNavigation();
-  const { user, updatedUser } = useAuth();
+  const { user, updatedUser, signOut } = useAuth();
 
   const [name, setName] = useState(user.name);
   const [password, setPassword] = useState("");
   const [location, setLocation] = useState(user.location || "");
 
   const [loading, setLoading] = useState(false);
+  const [modalAboutLocation, setModalAboutLocation] = useState(false);
+  const [loadingDeleteAccount, setLoadingDeleteAccount] = useState(false);
 
   async function handleSubmit() {
     setLoading(true);
@@ -84,6 +89,44 @@ export function Profile() {
     setLoading(false);
   }
 
+  const deleteDeleteAccount = async () => {
+    setLoadingDeleteAccount(true);
+    console.log('user.id', user.user_id)
+    if (user.user_id) {
+      api
+        .delete(`/users/${user.user_id}`)
+        .then(async (response) => {
+          if (response.status) {
+            showMessage({
+              message: "Conta excluída com sucesso!",
+              type: "success",
+              icon: "success",
+            });
+            setLoadingDeleteAccount(false);
+          }
+          await signOut();
+        })
+        .catch((err) => {
+          showMessage({
+            message: "Error!",
+            description:
+              "Ocorreu para excluir a conta, tente novamente mais tarde!",
+            type: "danger",
+            icon: "danger",
+          });
+          setLoadingDeleteAccount(false);
+        });
+    } else {
+      showMessage({
+        message: "Error!",
+        description:
+          "Ocorreu para excluir a conta, tente novamente mais tarde!",
+        type: "danger",
+        icon: "danger",
+      });
+    }
+  };
+
   return (
     <>
       <Header title="Perfil" />
@@ -132,8 +175,22 @@ export function Profile() {
             enabled={!loading}
             loading={loading}
           />
+          <DeleteAccountButton onPress={() => setModalAboutLocation(true)}>
+            <DeleteAccountButtonText>Deletar conta</DeleteAccountButtonText>
+          </DeleteAccountButton>
         </Container>
       </ScrollView>
+      <ModalDeleteAccount
+        cancelButtonText="Cancelar"
+        confirmButtonText="Excluir"
+        message="Gostaríamos de lembrar que, caso você decida excluir sua conta, perderá permanentemente o acesso aos seus dados e ao nosso serviço. Portanto, certifique-se de que essa é realmente a ação que deseja tomar antes de prosseguir com a exclusão. Caso tenha alguma dúvida ou precise de ajuda, estamos à disposição para auxiliá-lo"
+        show={modalAboutLocation}
+        close={() => setModalAboutLocation(false)}
+        onPressConfirmButton={deleteDeleteAccount}
+        enabledConfirmButton={!loadingDeleteAccount}
+        loadingConfirmButton={loadingDeleteAccount}
+        enabledCancelButton={!loadingDeleteAccount}
+      />
     </>
   );
 }

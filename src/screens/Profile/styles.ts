@@ -1,6 +1,9 @@
 import styled from "styled-components/native";
 
 import { Button } from "@components/Button";
+import { BorderlessButton } from "react-native-gesture-handler";
+import Modal from "@components/Modal";
+
 
 export const Container = styled.View`
   flex: 1;
@@ -29,10 +32,22 @@ export const ButtonHandleSubmit = styled(Button)`
 
 export const ContainerConfirmPassword = styled.View`
   margin-top: 20px;
-`
+`;
 
 export const TitleConfirmPassword = styled.Text`
- font-size: 16px;
+  font-size: 16px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   margin-bottom: 16px;
-`
+`;
+
+export const DeleteAccountButton = styled(BorderlessButton)`
+  align-items: center;
+`;
+
+export const DeleteAccountButtonText = styled.Text`
+  font-size: ${({ theme }) => theme.FONT_SIZE.LG}px;
+  font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
+  color: ${({ theme }) => theme.COLORS.RED};
+`;
+
+export const ModalDeleteAccount = styled(Modal)``;
