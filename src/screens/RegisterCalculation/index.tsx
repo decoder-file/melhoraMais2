@@ -91,9 +91,6 @@ export function RegisterCalculation() {
         timeOfStay: Yup.number()
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo tempo Permanência é obrigatório"),
-        outputWeight: Yup.number()
-          .min(1, "Campo peso de entrada deve ser maior que 0")
-          .required("Campo peso de saída é obrigatório"),
         rcInitial: Yup.number()
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo RC final é obrigatório"),
@@ -112,7 +109,6 @@ export function RegisterCalculation() {
         priceAtPurchase,
         gmd,
         timeOfStay,
-        outputWeight,
         rcInitial,
         rcFinal,
         atSalePrice,
@@ -198,6 +194,11 @@ export function RegisterCalculation() {
     await setResult(calc);
   };
 
+  const handleChangeOutputWeight = async () => {
+    const calc = (gmd*timeOfStay)/1000+entryWeight
+    await setOutputWeight(calc);
+  };
+
   useEffect(() => {
     handleChangeSalePrice();
     handleChangeReturnOnCapital();
@@ -205,6 +206,7 @@ export function RegisterCalculation() {
     handleChangePriceAtProduced();
     handleChangePurchasePrice();
     handleChangeAmountOfAtProduced();
+    handleChangeOutputWeight()
   }, [
     dailyCost,
     timeOfStay,
@@ -327,20 +329,10 @@ export function RegisterCalculation() {
             isSlide
             inputValue={timeOfStay}
           />
-          <InputSlider
+
+          <ShowResult
             title="Peso de saída(Kg)"
-            placeholder="Peso de saída"
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardAppearance="dark"
-            keyboardType="numeric"
-            onChangeText={(e) =>
-              setOutputWeight(e.length === 0 ? 0 : parseFloat(e))
-            }
-            value={outputWeight.toString()}
-            sliderValue={(value) => setOutputWeight(value)}
-            isSlide
-            inputValue={outputWeight}
+            label={outputWeight}
           />
 
           <InputSlider
