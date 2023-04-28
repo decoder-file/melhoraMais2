@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { showMessage } from "react-native-flash-message";
 import { FlatList, View } from "react-native";
 
@@ -150,6 +149,8 @@ export function Dashboard({ navigation }: DashboardProps) {
                 title={item.title}
                 result={item.result}
                 tagId={item.tag}
+                updatedAt={item.updatedAt}
+                
               />
             )}
             keyExtractor={(item) => item.id.toString()}

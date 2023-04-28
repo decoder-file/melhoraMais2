@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
-
+import moment from "moment";
 import { TouchableOpacityProps } from "react-native";
+import { Calendar } from "phosphor-react-native";
 
 import { FontAwesome } from "@expo/vector-icons";
 import { showMessage } from "react-native-flash-message";
+
+import { api } from "../../services/api";
 
 import {
   Container,
@@ -18,14 +21,13 @@ import {
   TextBold,
   ContainerTag,
 } from "./styles";
-import { api } from "../../services/api";
-import { Calendar } from "phosphor-react-native";
 
 export interface ButtonProps extends TouchableOpacityProps {
   tagId?: string;
   title: string;
   result: string;
   marginTop?: number;
+  updatedAt: string;
   clickCalculationCard: () => void;
   deleteCalculation: () => void;
 }
@@ -37,6 +39,7 @@ export function CardCalculation({
   marginTop,
   clickCalculationCard,
   deleteCalculation,
+  updatedAt,
 }: ButtonProps) {
   const [listTag, setListTag] = useState<any[]>([]);
   const [tagInfo, setTagInfo] = useState<any[]>([]);
@@ -106,7 +109,7 @@ export function CardCalculation({
 
         <CreationData>
           <Calendar size={20} />
-          <CreationDataText>12/01/2001</CreationDataText>
+          <CreationDataText>{moment(updatedAt).format('DD/MM/YYYY')}</CreationDataText>
         </CreationData>
       </ContainerDescription>
 
