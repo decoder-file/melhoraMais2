@@ -4,7 +4,7 @@ import { ptForm } from "yup-locale-pt";
 Yup.setLocale(ptForm);
 
 import { useNavigation } from "@react-navigation/native";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 import { Header } from "../../components/Header";
@@ -119,7 +119,7 @@ export function RegisterCalculation() {
         description: description.toString(),
         bash: bash.toString(),
         entranceWeight: entryWeight.toString(),
-        dailyCost: dailyCost.toString(),
+        dailyCost: `${dailyCost.toString()}-${priceAtPurchase}`,
         gmd: gmd.toString(),
         purchasePrice: purchasePrice.toString(),
         lengthOfStay: timeOfStay.toString(),
@@ -152,7 +152,7 @@ export function RegisterCalculation() {
         showMessage({
           message: "Error na autenticação",
           description:
-            "Ocorreu um erro ao fazer login, verifique as credenciais",
+            "Ocorreu um erro ao criar cálculo, tente novamente mais tarde!",
           type: "danger",
         });
         setLoading(false);
@@ -195,7 +195,7 @@ export function RegisterCalculation() {
   };
 
   const handleChangeOutputWeight = async () => {
-    const calc = (gmd*timeOfStay)/1000+entryWeight
+    const calc = (gmd * timeOfStay) / 1000 + entryWeight;
     await setOutputWeight(calc);
   };
 
@@ -206,7 +206,7 @@ export function RegisterCalculation() {
     handleChangePriceAtProduced();
     handleChangePurchasePrice();
     handleChangeAmountOfAtProduced();
-    handleChangeOutputWeight()
+    handleChangeOutputWeight();
   }, [
     dailyCost,
     timeOfStay,
@@ -255,6 +255,7 @@ export function RegisterCalculation() {
             onChangeText={setTitle}
             value={title}
           />
+          <View style={{ marginTop: 10 }} />
           <InputSlider
             title="Peso de entrada(Kg)"
             placeholder="Peso de entrada"
@@ -330,10 +331,9 @@ export function RegisterCalculation() {
             inputValue={timeOfStay}
           />
 
-          <ShowResult
-            title="Peso de saída(Kg)"
-            label={outputWeight}
-          />
+          <ShowResult title="Peso de saída(Kg)" label={outputWeight} />
+
+          <View style={{ marginTop: 10 }} />
 
           <InputSlider
             title="RC inicial(%)"

@@ -91,7 +91,6 @@ export function Profile() {
 
   const deleteDeleteAccount = async () => {
     setLoadingDeleteAccount(true);
-    console.log('user.id', user.user_id)
     if (user.user_id) {
       api
         .delete(`/users/${user.user_id}`)

@@ -103,6 +103,13 @@ export function Dashboard({ navigation }: DashboardProps) {
     setLoadingSignOut(false);
   };
 
+  const handleCalculationCard = async (id: string) => {
+    const data = calculations.filter((item) => item.id === id);
+    navigation.navigate("RegisterCalculationEdit", {
+      data,
+    });
+  };
+
   useEffect(() => {
     lookingSavedCalculations();
   }, [calculations]);
@@ -137,11 +144,7 @@ export function Dashboard({ navigation }: DashboardProps) {
             data={calculations}
             renderItem={({ item }) => (
               <CardCalculation
-                clickCalculationCard={() =>
-                  navigation.navigate("RegisterCalculationEdit", {
-                    id: item.id,
-                  })
-                }
+                clickCalculationCard={() => handleCalculationCard(item.id)}
                 deleteCalculation={() => {
                   selectCalculation(item.id), setModalDeleteCalculation(true);
                 }}
@@ -150,7 +153,6 @@ export function Dashboard({ navigation }: DashboardProps) {
                 result={item.result}
                 tagId={item.tag}
                 updatedAt={item.updatedAt}
-                
               />
             )}
             keyExtractor={(item) => item.id.toString()}

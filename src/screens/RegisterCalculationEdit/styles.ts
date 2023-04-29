@@ -29,3 +29,8 @@ export const ContainerTag = styled.ScrollView.attrs({
   flex-direction: row;
   margin-bottom: 10px;
 `;
+
+export const ButtonHandleSubmit = styled(Button)`
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
