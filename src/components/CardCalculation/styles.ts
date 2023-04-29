@@ -9,6 +9,8 @@ export const Container = styled.View`
   margin-bottom: 10px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   justify-content: space-between;
+  background-color: white;
+  border-radius: 8px;
 `;
 
 export const ContainerDescription = styled.TouchableOpacity`
@@ -27,7 +29,7 @@ export const Title = styled.Text`
 `;
 
 export const Description = styled.Text`
- color: ${({ theme }) => theme.COLORS.GRAY_700};
+  color: ${({ theme }) => theme.COLORS.GRAY_700};
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
   margin-top: 10px;
@@ -61,20 +63,20 @@ export const CreationData = styled.View`
   flex-direction: row;
   align-items: center;
   margin-top: 10px;
-`
+`;
 
 export const CreationDataText = styled.Text`
   margin-left: 5px;
   color: ${({ theme }) => theme.COLORS.GRAY_700};
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};
   font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
-`
+`;
 
 export const TextBold = styled.Text`
   color: ${({ theme }) => theme.COLORS.GRAY_700};
   font-family: ${({ theme }) => theme.FONT_FAMILY.BOLD};
   font-size: ${({ theme }) => theme.FONT_SIZE.MD}px;
-`
+`;
 
 export const ContainerTag = styled.View`
   flex-direction: row;
@@ -82,4 +84,4 @@ export const ContainerTag = styled.View`
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 10px;
-`
+`;

@@ -40,6 +40,7 @@ export function Dashboard({ navigation }: DashboardProps) {
   const [loadingDeleteCalculation, setLoadingDeleteCalculation] =
     useState(false);
   const [modalAboutLocation, setModalAboutLocation] = useState(false);
+  const [loadingCalculations, setLoadingCalculations] = useState(false);
 
   const selectCalculation = (id: string) => {
     setCurrentCalculation(id);
@@ -74,6 +75,7 @@ export function Dashboard({ navigation }: DashboardProps) {
   };
 
   const lookingSavedCalculations = async () => {
+    setLoadingCalculations(true);
     api
       .get("/calculations")
       .then((response) => {
@@ -87,6 +89,7 @@ export function Dashboard({ navigation }: DashboardProps) {
           icon: "danger",
         });
       });
+    setLoadingCalculations(false);
   };
 
   const EmptyListComponent = () => {
@@ -112,7 +115,7 @@ export function Dashboard({ navigation }: DashboardProps) {
 
   useEffect(() => {
     lookingSavedCalculations();
-  }, [calculations]);
+  }, []);
 
   return (
     <>
@@ -158,6 +161,9 @@ export function Dashboard({ navigation }: DashboardProps) {
             keyExtractor={(item) => item.id.toString()}
             initialNumToRender={10}
             ListEmptyComponent={EmptyListComponent}
+            onRefresh={lookingSavedCalculations}
+            refreshing={loadingCalculations}
+            extraData={loadingCalculations}
           />
         </ContainerCard>
       </Container>

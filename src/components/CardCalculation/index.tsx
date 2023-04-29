@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { TouchableOpacityProps } from "react-native";
+import { TouchableOpacityProps, View } from "react-native";
 import { Calendar } from "phosphor-react-native";
 
 import { FontAwesome } from "@expo/vector-icons";
@@ -109,10 +109,13 @@ export function CardCalculation({
 
         <CreationData>
           <Calendar size={20} />
-          <CreationDataText>{moment(updatedAt).format('DD/MM/YYYY')}</CreationDataText>
+          <CreationDataText>
+            {moment(updatedAt).format("DD/MM/YYYY")}
+          </CreationDataText>
         </CreationData>
       </ContainerDescription>
 
+      <View style={{ backgroundColor: "#FCF9ED", width: 3 }} />
       <ButtonDelete activeOpacity={0.8} onPress={deleteCalculation}>
         <FontAwesome name="trash" size={24} color="#F91E1E" />
       </ButtonDelete>
