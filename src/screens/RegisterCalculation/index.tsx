@@ -29,6 +29,7 @@ import {
 import { api } from "../../services/api";
 import { ShowResult } from "../../components/ShowResult";
 import theme from "@theme/index";
+import { InputSliderDecimalNumber } from "@components/InputSliderDecimalNumber";
 
 export function RegisterCalculation() {
   const navigation = useNavigation();
@@ -44,8 +45,8 @@ export function RegisterCalculation() {
   const [gmd, setGmd] = useState(0);
   const [timeOfStay, setTimeOfStay] = useState(0);
   const [outputWeight, setOutputWeight] = useState(0);
-  const [rcInitial, setRcInitial] = useState(0);
-  const [rcFinal, setRcFinal] = useState(0);
+  const [rcInitial, setRcInitial] = useState<string>("0.0");
+  const [rcFinal, setRcFinal] = useState<string>("0.0");
   const [atSalePrice, setAtSalePrice] = useState(0);
   const [purchasePrice, setPurchasePrice] = useState(0);
   const [priceAtProduced, setPriceAtProduced] = useState(0);
@@ -98,10 +99,10 @@ export function RegisterCalculation() {
         timeOfStay: Yup.number()
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo tempo Permanência é obrigatório"),
-        rcInitial: Yup.number()
+        rcInitial: Yup.string()
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo RC final é obrigatório"),
-        rcFinal: Yup.number()
+        rcFinal: Yup.string()
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo RC final é obrigatório"),
         atSalePrice: Yup.number()
@@ -131,8 +132,8 @@ export function RegisterCalculation() {
         purchasePrice: purchasePrice.toString(),
         lengthOfStay: timeOfStay.toString(),
         outputWeight: outputWeight.toString(),
-        rcInitial: rcInitial.toString(),
-        rcEnd: rcFinal.toString(),
+        rcInitial: rcInitial,
+        rcEnd: rcFinal,
         salePrice: atSalePrice.toString(),
         producedPrice: priceAtProduced.toString(),
         returnOnCapital: returnOnCapital.toString(),
@@ -174,18 +175,22 @@ export function RegisterCalculation() {
   };
 
   const handleChangePurchasePrice = async () => {
-    const calc = ((entryWeight * (rcInitial / 100)) / 15) * priceAtPurchase;
+    const calc =
+      ((entryWeight * (parseFloat(rcInitial) / 100)) / 15) * priceAtPurchase;
     await setPurchasePrice(calc);
   };
 
   const handleChangeAmountOfAtProduced = async () => {
     const calc =
-      (outputWeight * (rcFinal / 100) - entryWeight * (rcInitial / 100)) / 15;
+      (outputWeight * (parseFloat(rcFinal) / 100) -
+        entryWeight * (parseFloat(rcInitial) / 100)) /
+      15;
     await setBash(parseFloat(calc.toFixed(2)));
   };
 
   const handleChangeSalePrice = async () => {
-    const calc = ((outputWeight * (rcFinal / 100)) / 15) * atSalePrice;
+    const calc =
+      ((outputWeight * (parseFloat(rcFinal) / 100)) / 15) * atSalePrice;
     await setDescription(calc);
   };
 
@@ -394,29 +399,49 @@ export function RegisterCalculation() {
 
               <View style={{ marginTop: 10 }} />
 
-              <InputSlider
+              <InputSliderDecimalNumber
+                keyboardType="numeric"
                 title="RC inicial(%)"
                 placeholder="RC inicial"
                 autoCorrect={false}
                 keyboardAppearance="dark"
-                keyboardType="numeric"
                 onChangeText={(e) => {
-                  if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
-                    setRcInitial(0);
+                  const regex = /^(\d+(\.\d{0,1})?)?$/;
+                  if (regex.test(e)) {
+                    setRcInitial(e);
                   } else {
-                    const num = parseFloat(e);
-                    if (!isNaN(num) && num <= 100) {
-                      setRcInitial(num);
-                    }
+                    setRcInitial(e);
                   }
                 }}
-                value={rcInitial.toString()}
-                sliderValue={(value) => setRcInitial(value)}
-                isSlide
-                inputValue={rcInitial}
-                maximumValueSlider={100}
+                value={rcInitial}
+                inputValue={rcInitial ? parseFloat(rcInitial) : 0}
+                sliderValue={(newValue: number) => {
+                  setRcInitial(newValue.toFixed(1));
+                }}
               />
-              <InputSlider
+
+              <InputSliderDecimalNumber
+                keyboardType="numeric"
+                title="RC final(%)"
+                placeholder="RC final"
+                autoCorrect={false}
+                keyboardAppearance="dark"
+                onChangeText={(e) => {
+                  const regex = /^(\d+(\.\d{0,1})?)?$/;
+                  if (regex.test(e)) {
+                    setRcFinal(e);
+                  } else {
+                    setRcFinal(e);
+                  }
+                }}
+                value={rcFinal}
+                inputValue={rcFinal ? parseFloat(rcFinal) : 0}
+                sliderValue={(newValue: number) => {
+                  setRcFinal(newValue.toFixed(1));
+                }}
+              />
+
+              {/* <InputSlider
                 title="RC final(%)"
                 placeholder="RC final"
                 autoCapitalize="none"
@@ -439,7 +464,7 @@ export function RegisterCalculation() {
                 inputValue={rcFinal}
                 maximumValueSlider={100}
                 maxLength={10}
-              />
+              /> */}
 
               <InputSlider
                 title="Preço @ de venda(R$)"

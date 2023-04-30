@@ -35,6 +35,7 @@ import { ShowResult } from "../../components/ShowResult";
 import { LoadingScreen } from "@components/LoadingScreen";
 import { useNavigation } from "@react-navigation/native";
 import theme from "@theme/index";
+import { InputSliderDecimalNumber } from "@components/InputSliderDecimalNumber";
 
 export interface RegisterCalculationEditProps {
   data: CalculationsProps[];
@@ -87,8 +88,8 @@ export function RegisterCalculationEdit({
   const [gmd, setGmd] = useState(0);
   const [timeOfStay, setTimeOfStay] = useState(0);
   const [outputWeight, setOutputWeight] = useState(0);
-  const [rcInitial, setRcInitial] = useState(0);
-  const [rcFinal, setRcFinal] = useState(0);
+  const [rcInitial, setRcInitial] = useState<string>("0.0");
+  const [rcFinal, setRcFinal] = useState<string>("0.0");
   const [atSalePrice, setAtSalePrice] = useState(0);
   const [purchasePrice, setPurchasePrice] = useState(0);
   const [priceAtProduced, setPriceAtProduced] = useState(0);
@@ -108,8 +109,8 @@ export function RegisterCalculationEdit({
     setGmd(parseFloat(value.gmd));
     setTimeOfStay(parseFloat(value.lengthOfStay));
     setOutputWeight(parseFloat(value.outputWeight));
-    setRcInitial(parseFloat(value.rcInitial));
-    setRcFinal(parseFloat(value.rcEnd));
+    setRcInitial(value.rcInitial);
+    setRcFinal(value.rcEnd);
     setAtSalePrice(parseFloat(value.salePrice));
     setPurchasePrice(parseFloat(value.purchasePrice));
     setPriceAtProduced(parseFloat(value.producedPrice));
@@ -162,10 +163,10 @@ export function RegisterCalculationEdit({
         timeOfStay: Yup.number()
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo tempo Permanência é obrigatório"),
-        rcInitial: Yup.number()
+        rcInitial: Yup.string()
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo RC final é obrigatório"),
-        rcFinal: Yup.number()
+        rcFinal: Yup.string()
           .min(1, "Campo peso de entrada deve ser maior que 0")
           .required("Campo RC final é obrigatório"),
         atSalePrice: Yup.number()
@@ -238,18 +239,18 @@ export function RegisterCalculationEdit({
   };
 
   const handleChangePurchasePrice = async () => {
-    const calc = ((entryWeight * (rcInitial / 100)) / 15) * priceAtPurchase;
+    const calc = ((entryWeight * (parseFloat(rcInitial) / 100)) / 15) * priceAtPurchase;
     await setPurchasePrice(calc);
   };
 
   const handleChangeAmountOfAtProduced = async () => {
     const calc =
-      (outputWeight * (rcFinal / 100) - entryWeight * (rcInitial / 100)) / 15;
+      (outputWeight * (parseFloat(rcFinal) / 100) - entryWeight * (parseFloat(rcInitial) / 100)) / 15;
     await setBash(parseFloat(calc.toFixed(2)));
   };
 
   const handleChangeSalePrice = async () => {
-    const calc = ((outputWeight * (rcFinal / 100)) / 15) * atSalePrice;
+    const calc = ((outputWeight * (parseFloat(rcFinal) / 100)) / 15) * atSalePrice;
     await setDescription(calc);
   };
 
@@ -483,56 +484,48 @@ export function RegisterCalculationEdit({
 
                 <View style={{ marginTop: 10 }} />
 
-                <InputSlider
-                  title="RC inicial(%)"
-                  placeholder="RC inicial"
-                  autoCorrect={false}
-                  keyboardAppearance="dark"
-                  keyboardType="numeric"
-                  onChangeText={(e) => {
-                    if (
-                      e === "" ||
-                      e === "0" ||
-                      (e.length === 1 && e !== ".")
-                    ) {
-                      setRcInitial(0);
-                    } else {
-                      const num = parseFloat(e);
-                      if (!isNaN(num) && num <= 100) {
-                        setRcInitial(num);
-                      }
-                    }
-                  }}
-                  value={rcInitial.toString()}
-                  sliderValue={(value) => setRcInitial(value)}
-                  isSlide
-                  inputValue={rcInitial}
-                  maximumValueSlider={100}
-                />
-                <InputSlider
-                  title="RC final(%)"
-                  placeholder="RC final"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardAppearance="dark"
-                  keyboardType="decimal-pad"
-                  onChangeText={(e) => {
-                    if (e === "" || e === "0") {
-                      setRcFinal(0);
-                    } else {
-                      const num = parseFloat(e.replace(",", "."));
-                      if (!isNaN(num) && num <= 1000) {
-                        setRcFinal(num);
-                      }
-                    }
-                  }}
-                  value={rcFinal.toString()}
-                  sliderValue={(value) => setRcFinal(value)}
-                  isSlide
-                  inputValue={rcFinal}
-                  maximumValueSlider={100}
-                  maxLength={10}
-                />
+                <InputSliderDecimalNumber
+                keyboardType="numeric"
+                title="RC inicial(%)"
+                placeholder="RC inicial"
+                autoCorrect={false}
+                keyboardAppearance="dark"
+                onChangeText={(e) => {
+                  const regex = /^(\d+(\.\d{0,1})?)?$/;
+                  if (regex.test(e)) {
+                    setRcInitial(e);
+                  } else {
+                    setRcInitial(e);
+                  }
+                }}
+                value={rcInitial}
+                inputValue={rcInitial ? parseFloat(rcInitial) : 0 }
+                sliderValue={(newValue: number) => {
+                  setRcInitial(newValue.toFixed(1));
+                }}
+              />
+
+<InputSliderDecimalNumber
+                keyboardType="numeric"
+                title="RC final(%)"
+                placeholder="RC final"
+                autoCorrect={false}
+                keyboardAppearance="dark"
+                onChangeText={(e) => {
+                  const regex = /^(\d+(\.\d{0,1})?)?$/;
+                  if (regex.test(e)) {
+                    setRcFinal(e);
+                  } else {
+                    setRcFinal(e);
+                  }
+                }}
+                value={rcFinal}
+                inputValue={rcFinal ? parseFloat(rcFinal) : 0 }
+                sliderValue={(newValue: number) => {
+                  setRcFinal(newValue.toFixed(1));
+                }}
+              />
+
 
                 <InputSlider
                   title="Preço @ de venda(R$)"
