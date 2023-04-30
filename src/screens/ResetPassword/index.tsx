@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
+  StatusBar,
   TouchableWithoutFeedback,
 } from "react-native";
 
@@ -51,8 +52,7 @@ export function ResetPassword() {
     setLoading(true);
     try {
       const schema = Yup.object().shape({
-        token: Yup.string()
-          .required("Campo token é obrigatório"),
+        token: Yup.string().required("Campo token é obrigatório"),
         password: Yup.string().required("Campo senha é obrigatório"),
       });
 
@@ -64,7 +64,7 @@ export function ResetPassword() {
         type: "success",
         icon: "success",
       });
-      navigation.navigate('login');
+      navigation.navigate("login");
       setLoading(false);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
@@ -99,6 +99,10 @@ export function ResetPassword() {
           justifyContent: "center",
         }}
       >
+        <StatusBar
+          backgroundColor={theme.COLORS.GRAY_50}
+          barStyle="dark-content"
+        />
         <SafeAreaView style={{ backgroundColor: "#FCF9ED", flex: 1 }}>
           <Container>
             <BackButton onPress={() => navigation.goBack()}>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
+  StatusBar,
   TouchableWithoutFeedback,
 } from "react-native";
 
@@ -53,7 +54,7 @@ export function TokenSending() {
         type: "success",
         icon: "success",
       });
-      navigation.navigate('resetPassword');
+      navigation.navigate("resetPassword");
       setLoading(false);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
@@ -88,6 +89,10 @@ export function TokenSending() {
           justifyContent: "center",
         }}
       >
+        <StatusBar
+          backgroundColor={theme.COLORS.GRAY_50}
+          barStyle="dark-content"
+        />
         <SafeAreaView style={{ backgroundColor: "#FCF9ED", flex: 1 }}>
           <Container>
             <BackButton onPress={() => navigation.goBack()}>

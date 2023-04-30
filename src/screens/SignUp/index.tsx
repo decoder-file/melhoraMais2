@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
+  StatusBar,
   TouchableWithoutFeedback,
 } from "react-native";
 
@@ -93,72 +94,80 @@ export function SignUp() {
   }
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={{ backgroundColor: "#FCF9ED" }}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView
-          behavior="height"
-          enabled
-          style={{
-            flex: 1,
-            backgroundColor: theme.COLORS.GRAY_50,
-            justifyContent: "center",
-          }}
-        >
-          <SafeAreaView style={{ backgroundColor: "#FCF9ED", flex: 1 }}>
-            <Container>
-              <BackButton onPress={() => navigation.goBack()}>
-                <AntDesign name="left" size={24} color="black" />
-                <BackButtonText>Voltar</BackButtonText>
-              </BackButton>
-              <Title>Crie sua{"\n"}conta</Title>
-              <Caption>Faça seu cadastro de{"\n"}forma rápida e fácil.</Caption>
-              <ContainerInput>
-                <InputEmail
-                  placeholder="Informe seu nome"
-                  autoCorrect={false}
-                  onChangeText={setName}
-                  value={name}
-                  returnKeyType="next"
-                  icon={<User />}
-                />
-                <Separator />
-                <InputEmail
-                  placeholder="E-mail"
-                  keyboardType="email-address"
-                  autoCorrect={false}
-                  autoCapitalize="none"
-                  onChangeText={setEmail}
-                  returnKeyType="next"
-                  value={email}
-                />
-                <Separator />
-                <PasswordInput
-                  placeholder="Informe sua senha"
-                  onChangeText={setPassword}
-                  returnKeyType="next"
-                  value={password}
-                />
-                <Separator />
-                <PasswordInput
-                  placeholder="Confirme sua senha"
-                  onChangeText={setConfirmPassword}
-                  value={confirmPassword}
-                />
-              </ContainerInput>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.COLORS.GRAY_50 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ backgroundColor: "#FCF9ED" }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView
+            behavior="height"
+            enabled
+            style={{
+              flex: 1,
+              backgroundColor: theme.COLORS.GRAY_50,
+              justifyContent: "center",
+            }}
+          >
+            <StatusBar
+              backgroundColor={theme.COLORS.GRAY_50}
+              barStyle="dark-content"
+            />
+            <SafeAreaView style={{ backgroundColor: "#FCF9ED", flex: 1 }}>
+              <Container>
+                <BackButton onPress={() => navigation.goBack()}>
+                  <AntDesign name="left" size={24} color="black" />
+                  <BackButtonText>Voltar</BackButtonText>
+                </BackButton>
+                <Title>Crie sua{"\n"}conta</Title>
+                <Caption>
+                  Faça seu cadastro de{"\n"}forma rápida e fácil.
+                </Caption>
+                <ContainerInput>
+                  <InputEmail
+                    placeholder="Informe seu nome"
+                    autoCorrect={false}
+                    onChangeText={setName}
+                    value={name}
+                    returnKeyType="next"
+                    icon={<User />}
+                  />
+                  <Separator />
+                  <InputEmail
+                    placeholder="E-mail"
+                    keyboardType="email-address"
+                    autoCorrect={false}
+                    autoCapitalize="none"
+                    onChangeText={setEmail}
+                    returnKeyType="next"
+                    value={email}
+                  />
+                  <Separator />
+                  <PasswordInput
+                    placeholder="Informe sua senha"
+                    onChangeText={setPassword}
+                    returnKeyType="next"
+                    value={password}
+                  />
+                  <Separator />
+                  <PasswordInput
+                    placeholder="Confirme sua senha"
+                    onChangeText={setConfirmPassword}
+                    value={confirmPassword}
+                  />
+                </ContainerInput>
 
-              <ConfirmButton
-                title="Criar conta"
-                onPress={handleRegister}
-                enabled={!loading}
-                loading={loading}
-              />
-            </Container>
-          </SafeAreaView>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
-    </ScrollView>
+                <ConfirmButton
+                  title="Criar conta"
+                  onPress={handleRegister}
+                  enabled={!loading}
+                  loading={loading}
+                />
+              </Container>
+            </SafeAreaView>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
