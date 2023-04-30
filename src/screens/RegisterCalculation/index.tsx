@@ -270,6 +270,7 @@ export function RegisterCalculation() {
             sliderValue={(value) => setEntryWeight(value)}
             isSlide
             inputValue={entryWeight}
+            maximumValueSlider={1500}
           />
           <InputSlider
             title="Custo diário(R$)"
@@ -285,6 +286,7 @@ export function RegisterCalculation() {
             sliderValue={(value) => setDailyCost(value)}
             isSlide
             inputValue={dailyCost}
+            maximumValueSlider={100}
           />
 
           <InputSlider
@@ -300,6 +302,7 @@ export function RegisterCalculation() {
             sliderValue={(value) => setPriceAtPurchase(value)}
             isSlide
             inputValue={priceAtPurchase}
+            maximumValueSlider={1000}
           />
           <InputSlider
             title="GMD(g)"
@@ -313,6 +316,7 @@ export function RegisterCalculation() {
             sliderValue={(value) => setGmd(value)}
             isSlide
             inputValue={gmd}
+            maximumValueSlider={3000}
           />
 
           <InputSlider
@@ -329,6 +333,7 @@ export function RegisterCalculation() {
             sliderValue={(value) => setTimeOfStay(value)}
             isSlide
             inputValue={timeOfStay}
+            maximumValueSlider={1000}
           />
 
           <ShowResult title="Peso de saída(Kg)" label={outputWeight} />
@@ -349,6 +354,7 @@ export function RegisterCalculation() {
             sliderValue={(value) => setRcInitial(value)}
             isSlide
             inputValue={rcInitial}
+            maximumValueSlider={100}
           />
           <InputSlider
             title="RC final(%)"
@@ -362,6 +368,7 @@ export function RegisterCalculation() {
             sliderValue={(value) => setRcFinal(value)}
             isSlide
             inputValue={rcFinal}
+            maximumValueSlider={100}
           />
 
           <InputSlider
@@ -378,6 +385,7 @@ export function RegisterCalculation() {
             sliderValue={(value) => setAtSalePrice(value)}
             isSlide
             inputValue={atSalePrice}
+            maximumValueSlider={1000}
           />
 
           <ShowResult

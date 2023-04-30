@@ -23,6 +23,7 @@ interface InputSliderProps extends TextInputProps {
   sliderValue: ((value: number) => void) | undefined;
   isSlide?: boolean;
   inputValue: number;
+  maximumValueSlider: number;
 }
 
 export function InputSlider({
@@ -32,6 +33,7 @@ export function InputSlider({
   error,
   isSlide,
   inputValue,
+  maximumValueSlider,
   ...rest
 }: InputSliderProps) {
   return (
@@ -68,7 +70,7 @@ export function InputSlider({
             minimumTrackTintColor="#FF5531"
             maximumTrackTintColor="#C8C8C8"
             thumbTintColor="#FF5531"
-            maximumValue={2000}
+            maximumValue={maximumValueSlider}
             step={1}
             onValueChange={sliderValue}
             value={inputValue}
