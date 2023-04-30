@@ -115,7 +115,7 @@ export function Dashboard({ navigation }: DashboardProps) {
 
   useEffect(() => {
     lookingSavedCalculations();
-  }, []);
+  }, [calculations]);
 
   return (
     <>

@@ -66,7 +66,7 @@ export function RegisterCalculationEdit({
   route,
 }: RegisterCalculationEditNavigateProps) {
   const navigation = useNavigation();
-  
+
   const [selectTagId, setSelectTagId] = useState("");
   const [selectTagList, setSelectTagList] = useState({} as TagProps);
   const [loadingScreen, setLoadingScreen] = useState(true);
@@ -332,9 +332,16 @@ export function RegisterCalculationEdit({
               autoCorrect={false}
               keyboardAppearance="dark"
               keyboardType="numeric"
-              onChangeText={(e) =>
-                setEntryWeight(e.length === 0 ? 0 : parseFloat(e))
-              }
+              onChangeText={(e) => {
+                if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                  setEntryWeight(0);
+                } else {
+                  const num = parseFloat(e);
+                  if (!isNaN(num) && num <= 1500) {
+                    setEntryWeight(num);
+                  }
+                }
+              }}
               value={entryWeight.toString()}
               sliderValue={(value) => setEntryWeight(value)}
               isSlide
@@ -348,9 +355,16 @@ export function RegisterCalculationEdit({
               autoCorrect={false}
               keyboardAppearance="dark"
               keyboardType="numeric"
-              onChangeText={(e) =>
-                setDailyCost(e.length === 0 ? 0 : parseFloat(e))
-              }
+              onChangeText={(e) => {
+                if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                  setDailyCost(0);
+                } else {
+                  const num = parseFloat(e);
+                  if (!isNaN(num) && num <= 100) {
+                    setDailyCost(num);
+                  }
+                }
+              }}
               value={dailyCost.toString()}
               sliderValue={(value) => setDailyCost(value)}
               isSlide
@@ -364,9 +378,16 @@ export function RegisterCalculationEdit({
               autoCorrect={false}
               keyboardAppearance="dark"
               keyboardType="numeric"
-              onChangeText={(e) =>
-                setPriceAtPurchase(e.length === 0 ? 0 : parseFloat(e))
-              }
+              onChangeText={(e) => {
+                if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                  setPriceAtPurchase(0);
+                } else {
+                  const num = parseFloat(e);
+                  if (!isNaN(num) && num <= 1000) {
+                    setPriceAtPurchase(num);
+                  }
+                }
+              }}
               value={priceAtPurchase.toString()}
               sliderValue={(value) => setPriceAtPurchase(value)}
               isSlide
@@ -380,7 +401,16 @@ export function RegisterCalculationEdit({
               autoCorrect={false}
               keyboardAppearance="dark"
               keyboardType="numeric"
-              onChangeText={(e) => setGmd(e.length === 0 ? 0 : parseFloat(e))}
+              onChangeText={(e) => {
+                if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                  setGmd(0);
+                } else {
+                  const num = parseFloat(e);
+                  if (!isNaN(num) && num <= 3000) {
+                    setGmd(num);
+                  }
+                }
+              }}
               value={gmd.toString()}
               sliderValue={(value) => setGmd(value)}
               isSlide
@@ -395,9 +425,16 @@ export function RegisterCalculationEdit({
               autoCorrect={false}
               keyboardAppearance="dark"
               keyboardType="numeric"
-              onChangeText={(e) =>
-                setTimeOfStay(e.length === 0 ? 0 : parseFloat(e))
-              }
+              onChangeText={(e) => {
+                if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                  setTimeOfStay(0);
+                } else {
+                  const num = parseFloat(e);
+                  if (!isNaN(num) && num <= 1000) {
+                    setTimeOfStay(num);
+                  }
+                }
+              }}
               value={timeOfStay.toString()}
               sliderValue={(value) => setTimeOfStay(value)}
               isSlide
@@ -412,13 +449,19 @@ export function RegisterCalculationEdit({
             <InputSlider
               title="RC inicial(%)"
               placeholder="RC inicial"
-              autoCapitalize="none"
               autoCorrect={false}
               keyboardAppearance="dark"
               keyboardType="numeric"
-              onChangeText={(e) =>
-                setRcInitial(e.length === 0 ? 0 : parseFloat(e))
-              }
+              onChangeText={(e) => {
+                if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                  setRcInitial(0);
+                } else {
+                  const num = parseFloat(e);
+                  if (!isNaN(num) && num <= 100) {
+                    setRcInitial(num);
+                  }
+                }
+              }}
               value={rcInitial.toString()}
               sliderValue={(value) => setRcInitial(value)}
               isSlide
@@ -431,15 +474,23 @@ export function RegisterCalculationEdit({
               autoCapitalize="none"
               autoCorrect={false}
               keyboardAppearance="dark"
-              keyboardType="numeric"
-              onChangeText={(e) =>
-                setRcFinal(e.length === 0 ? 0 : parseFloat(e))
-              }
+              keyboardType="decimal-pad"
+              onChangeText={(e) => {
+                if (e === "" || e === "0") {
+                  setRcFinal(0);
+                } else {
+                  const num = parseFloat(e.replace(",", "."));
+                  if (!isNaN(num) && num <= 1000) {
+                    setRcFinal(num);
+                  }
+                }
+              }}
               value={rcFinal.toString()}
               sliderValue={(value) => setRcFinal(value)}
               isSlide
               inputValue={rcFinal}
               maximumValueSlider={100}
+              maxLength={10}
             />
 
             <InputSlider
@@ -449,9 +500,16 @@ export function RegisterCalculationEdit({
               autoCorrect={false}
               keyboardAppearance="dark"
               keyboardType="numeric"
-              onChangeText={(e) =>
-                setAtSalePrice(e.length === 0 ? 0 : parseFloat(e))
-              }
+              onChangeText={(e) => {
+                if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                  setAtSalePrice(0);
+                } else {
+                  const num = parseFloat(e);
+                  if (!isNaN(num) && num <= 1000) {
+                    setAtSalePrice(num);
+                  }
+                }
+              }}
               value={atSalePrice.toString()}
               sliderValue={(value) => setAtSalePrice(value)}
               isSlide
@@ -483,7 +541,6 @@ export function RegisterCalculationEdit({
             />
 
             <ShowResult title="Resultado" label={result} isMoney />
-
             <ButtonHandleSubmit
               title="Salvar Alteração"
               onPress={handleSubmit}

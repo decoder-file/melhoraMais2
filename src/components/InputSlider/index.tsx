@@ -71,6 +71,7 @@ export function InputSlider({
             maximumTrackTintColor="#C8C8C8"
             thumbTintColor="#FF5531"
             maximumValue={maximumValueSlider}
+            minimumValue={1}
             step={1}
             onValueChange={sliderValue}
             value={inputValue}
