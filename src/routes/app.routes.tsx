@@ -10,7 +10,7 @@ import { RegisterCalculationEdit, RegisterCalculationEditProps} from "../screens
 
 export type RootStackParamList = {
   CreateTag: undefined;
-  Dashboard: undefined;
+  Dashboard: RegisterCalculationEditProps;
   RegisterCalculation: undefined;
   RegisterCalculationEdit: RegisterCalculationEditProps;
   Profile: undefined;

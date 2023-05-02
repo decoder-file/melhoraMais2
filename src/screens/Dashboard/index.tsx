@@ -28,7 +28,11 @@ import {
 interface DashboardProps
   extends StackScreenProps<RootStackParamList, "Dashboard"> {}
 
-export function Dashboard({ navigation }: DashboardProps) {
+export interface RegisterCalculationEditProps {
+  refreshing?: boolean;
+}
+
+export function Dashboard({ navigation, route }: DashboardProps) {
   const { user, signOut } = useAuth();
   const netInfo = useNetInfo();
 
@@ -41,9 +45,26 @@ export function Dashboard({ navigation }: DashboardProps) {
     useState(false);
   const [modalAboutLocation, setModalAboutLocation] = useState(false);
   const [loadingCalculations, setLoadingCalculations] = useState(false);
+  const [listTag, setListTag] = useState<any[]>([]);
 
   const selectCalculation = (id: string) => {
     setCurrentCalculation(id);
+  };
+
+  const tagSearch = async () => {
+    api
+      .get("/tag-calculations")
+      .then((response) => {
+        setListTag(response.data);
+      })
+      .catch((err) => {
+        showMessage({
+          message: "Error!",
+          description: "Ocorreu para carregar as tag personalizadas",
+          type: "danger",
+          icon: "danger",
+        });
+      });
   };
 
   const deleteCalculation = async () => {
@@ -60,12 +81,14 @@ export function Dashboard({ navigation }: DashboardProps) {
           });
           setLoadingDeleteCalculation(false);
           setModalDeleteCalculation(false);
+          lookingSavedCalculations();
         }
       })
       .catch((err) => {
         showMessage({
           message: "Error!",
-          description: "Ocorreu para carregar as tag personalizadas",
+          description:
+            "Ocorreu para excluir o Cálculo. Tente novamente mais tarde!",
           type: "danger",
           icon: "danger",
         });
@@ -115,7 +138,8 @@ export function Dashboard({ navigation }: DashboardProps) {
 
   useEffect(() => {
     lookingSavedCalculations();
-  }, [calculations]);
+    tagSearch();
+  }, [route]);
 
   return (
     <>
@@ -156,6 +180,8 @@ export function Dashboard({ navigation }: DashboardProps) {
                 result={item.result}
                 tagId={item.tag}
                 updatedAt={item.updatedAt}
+                tagColor={listTag.find((color) => color.id === item.tag)?.color}
+                tagTitle={listTag.find((color) => color.id === item.tag)?.title}
               />
             )}
             keyExtractor={(item) => item.id.toString()}

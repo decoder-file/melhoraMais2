@@ -4,13 +4,7 @@ import * as Yup from "yup";
 import { ptForm } from "yup-locale-pt";
 Yup.setLocale(ptForm);
 
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  ScrollView,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, ScrollView, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 import { Header } from "../../components/Header";
@@ -27,7 +21,6 @@ import { RootStackParamList } from "../../routes/app.routes";
 import {
   ButtonHandleSubmit,
   Container,
-  ContainerInputSlider,
   ContainerTag,
   TitleTag,
 } from "./styles";
@@ -210,7 +203,9 @@ export function RegisterCalculationEdit({
         type: "success",
         icon: "success",
       });
-      navigation.navigate("Dashboard");
+      navigation.navigate("Dashboard", {
+        refreshing: true,
+      });
       setLoading(false);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
@@ -239,18 +234,22 @@ export function RegisterCalculationEdit({
   };
 
   const handleChangePurchasePrice = async () => {
-    const calc = ((entryWeight * (parseFloat(rcInitial) / 100)) / 15) * priceAtPurchase;
+    const calc =
+      ((entryWeight * (parseFloat(rcInitial) / 100)) / 15) * priceAtPurchase;
     await setPurchasePrice(calc);
   };
 
   const handleChangeAmountOfAtProduced = async () => {
     const calc =
-      (outputWeight * (parseFloat(rcFinal) / 100) - entryWeight * (parseFloat(rcInitial) / 100)) / 15;
+      (outputWeight * (parseFloat(rcFinal) / 100) -
+        entryWeight * (parseFloat(rcInitial) / 100)) /
+      15;
     await setBash(parseFloat(calc.toFixed(2)));
   };
 
   const handleChangeSalePrice = async () => {
-    const calc = ((outputWeight * (parseFloat(rcFinal) / 100)) / 15) * atSalePrice;
+    const calc =
+      ((outputWeight * (parseFloat(rcFinal) / 100)) / 15) * atSalePrice;
     await setDescription(calc);
   };
 
@@ -304,187 +303,166 @@ export function RegisterCalculationEdit({
   return (
     <>
       <Header title="Editar cálculo" />
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView
-          behavior="padding"
-          enabled
-          style={{
-            flex: 1,
-            backgroundColor: theme.COLORS.GRAY_50,
-            justifyContent: "center",
-          }}
+      <KeyboardAvoidingView
+        behavior="padding"
+        enabled
+        style={{
+          flex: 1,
+          backgroundColor: theme.COLORS.GRAY_50,
+          justifyContent: "center",
+        }}
+      >
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          style={{ backgroundColor: "#FCF9F2" }}
         >
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            style={{ backgroundColor: "#FCF9F2" }}
-          >
-            {!loadingScreen && !loadingTag ? (
-              <Container>
-                {selectTagId && (
-                  <>
-                    <TitleTag>Etiqueta:</TitleTag>
-                    <ContainerTag>
-                      {selectTagList && (
-                        <Tag
-                          title={selectTagList.title}
-                          color={selectTagList.color}
-                        />
-                      )}
-                    </ContainerTag>
-                  </>
-                )}
-                <Input
-                  title="Título"
-                  placeholder="Título"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardAppearance="dark"
-                  onChangeText={setTitle}
-                  value={title}
-                />
-                <View style={{ marginTop: 10 }} />
-                <InputSlider
-                  title="Peso de entrada(Kg)"
-                  placeholder="Peso de entrada"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardAppearance="dark"
-                  keyboardType="numeric"
-                  onChangeText={(e) => {
-                    if (
-                      e === "" ||
-                      e === "0" ||
-                      (e.length === 1 && e !== ".")
-                    ) {
-                      setEntryWeight(0);
-                    } else {
-                      const num = parseFloat(e);
-                      if (!isNaN(num) && num <= 1500) {
-                        setEntryWeight(num);
-                      }
+          {!loadingScreen && !loadingTag ? (
+            <Container>
+              {selectTagId && (
+                <>
+                  <TitleTag>Etiqueta:</TitleTag>
+                  <ContainerTag>
+                    {selectTagList && (
+                      <Tag
+                        title={selectTagList.title}
+                        color={selectTagList.color}
+                      />
+                    )}
+                  </ContainerTag>
+                </>
+              )}
+              <Input
+                title="Título"
+                placeholder="Título"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="dark"
+                onChangeText={setTitle}
+                value={title}
+              />
+              <View style={{ marginTop: 10 }} />
+              <InputSlider
+                title="Peso de entrada(Kg)"
+                placeholder="Peso de entrada"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="dark"
+                keyboardType="numeric"
+                onChangeText={(e) => {
+                  if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                    setEntryWeight(0);
+                  } else {
+                    const num = parseFloat(e);
+                    if (!isNaN(num) && num <= 1500) {
+                      setEntryWeight(num);
                     }
-                  }}
-                  value={entryWeight.toString()}
-                  sliderValue={(value) => setEntryWeight(value)}
-                  isSlide
-                  inputValue={entryWeight}
-                  maximumValueSlider={1500}
-                />
-                <InputSlider
-                  title="Custo diário(R$)"
-                  placeholder="Custo diário"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardAppearance="dark"
-                  keyboardType="numeric"
-                  onChangeText={(e) => {
-                    if (
-                      e === "" ||
-                      e === "0" ||
-                      (e.length === 1 && e !== ".")
-                    ) {
-                      setDailyCost(0);
-                    } else {
-                      const num = parseFloat(e);
-                      if (!isNaN(num) && num <= 100) {
-                        setDailyCost(num);
-                      }
+                  }
+                }}
+                value={entryWeight.toString()}
+                sliderValue={(value) => setEntryWeight(value)}
+                isSlide
+                inputValue={entryWeight}
+                maximumValueSlider={1500}
+              />
+              <InputSlider
+                title="Custo diário(R$)"
+                placeholder="Custo diário"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="dark"
+                keyboardType="numeric"
+                onChangeText={(e) => {
+                  if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                    setDailyCost(0);
+                  } else {
+                    const num = parseFloat(e);
+                    if (!isNaN(num) && num <= 100) {
+                      setDailyCost(num);
                     }
-                  }}
-                  value={dailyCost.toString()}
-                  sliderValue={(value) => setDailyCost(value)}
-                  isSlide
-                  inputValue={dailyCost}
-                  maximumValueSlider={100}
-                />
+                  }
+                }}
+                value={dailyCost.toString()}
+                sliderValue={(value) => setDailyCost(value)}
+                isSlide
+                inputValue={dailyCost}
+                maximumValueSlider={100}
+              />
 
-                <InputSlider
-                  title="Preço @ compra(R$)"
-                  placeholder="Preço"
-                  autoCorrect={false}
-                  keyboardAppearance="dark"
-                  keyboardType="numeric"
-                  onChangeText={(e) => {
-                    if (
-                      e === "" ||
-                      e === "0" ||
-                      (e.length === 1 && e !== ".")
-                    ) {
-                      setPriceAtPurchase(0);
-                    } else {
-                      const num = parseFloat(e);
-                      if (!isNaN(num) && num <= 1000) {
-                        setPriceAtPurchase(num);
-                      }
+              <InputSlider
+                title="Preço @ compra(R$)"
+                placeholder="Preço"
+                autoCorrect={false}
+                keyboardAppearance="dark"
+                keyboardType="numeric"
+                onChangeText={(e) => {
+                  if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                    setPriceAtPurchase(0);
+                  } else {
+                    const num = parseFloat(e);
+                    if (!isNaN(num) && num <= 1000) {
+                      setPriceAtPurchase(num);
                     }
-                  }}
-                  value={priceAtPurchase.toString()}
-                  sliderValue={(value) => setPriceAtPurchase(value)}
-                  isSlide
-                  inputValue={priceAtPurchase}
-                  maximumValueSlider={1000}
-                />
-                <InputSlider
-                  title="GMD(g)"
-                  placeholder="GMD"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardAppearance="dark"
-                  keyboardType="numeric"
-                  onChangeText={(e) => {
-                    if (
-                      e === "" ||
-                      e === "0" ||
-                      (e.length === 1 && e !== ".")
-                    ) {
-                      setGmd(0);
-                    } else {
-                      const num = parseFloat(e);
-                      if (!isNaN(num) && num <= 3000) {
-                        setGmd(num);
-                      }
+                  }
+                }}
+                value={priceAtPurchase.toString()}
+                sliderValue={(value) => setPriceAtPurchase(value)}
+                isSlide
+                inputValue={priceAtPurchase}
+                maximumValueSlider={1000}
+              />
+              <InputSlider
+                title="GMD(g)"
+                placeholder="GMD"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="dark"
+                keyboardType="numeric"
+                onChangeText={(e) => {
+                  if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                    setGmd(0);
+                  } else {
+                    const num = parseFloat(e);
+                    if (!isNaN(num) && num <= 3000) {
+                      setGmd(num);
                     }
-                  }}
-                  value={gmd.toString()}
-                  sliderValue={(value) => setGmd(value)}
-                  isSlide
-                  inputValue={gmd}
-                  maximumValueSlider={3000}
-                />
+                  }
+                }}
+                value={gmd.toString()}
+                sliderValue={(value) => setGmd(value)}
+                isSlide
+                inputValue={gmd}
+                maximumValueSlider={3000}
+              />
 
-                <InputSlider
-                  title="Tempo Permanência(dias)"
-                  placeholder="Tempo Permanência"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardAppearance="dark"
-                  keyboardType="numeric"
-                  onChangeText={(e) => {
-                    if (
-                      e === "" ||
-                      e === "0" ||
-                      (e.length === 1 && e !== ".")
-                    ) {
-                      setTimeOfStay(0);
-                    } else {
-                      const num = parseFloat(e);
-                      if (!isNaN(num) && num <= 1000) {
-                        setTimeOfStay(num);
-                      }
+              <InputSlider
+                title="Tempo Permanência(dias)"
+                placeholder="Tempo Permanência"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="dark"
+                keyboardType="numeric"
+                onChangeText={(e) => {
+                  if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                    setTimeOfStay(0);
+                  } else {
+                    const num = parseFloat(e);
+                    if (!isNaN(num) && num <= 1000) {
+                      setTimeOfStay(num);
                     }
-                  }}
-                  value={timeOfStay.toString()}
-                  sliderValue={(value) => setTimeOfStay(value)}
-                  isSlide
-                  inputValue={timeOfStay}
-                  maximumValueSlider={1000}
-                />
+                  }
+                }}
+                value={timeOfStay.toString()}
+                sliderValue={(value) => setTimeOfStay(value)}
+                isSlide
+                inputValue={timeOfStay}
+                maximumValueSlider={1000}
+              />
 
-                <ShowResult title="Peso de saída(Kg)" label={outputWeight} />
+              <ShowResult title="Peso de saída(Kg)" label={outputWeight} />
 
-                <View style={{ marginTop: 10 }} />
+              <View style={{ marginTop: 10 }} />
 
-                <InputSliderDecimalNumber
+              <InputSliderDecimalNumber
                 keyboardType="numeric"
                 title="RC inicial(%)"
                 placeholder="RC inicial"
@@ -499,13 +477,13 @@ export function RegisterCalculationEdit({
                   }
                 }}
                 value={rcInitial}
-                inputValue={rcInitial ? parseFloat(rcInitial) : 0 }
+                inputValue={rcInitial ? parseFloat(rcInitial) : 0}
                 sliderValue={(newValue: number) => {
                   setRcInitial(newValue.toFixed(1));
                 }}
               />
 
-<InputSliderDecimalNumber
+              <InputSliderDecimalNumber
                 keyboardType="numeric"
                 title="RC final(%)"
                 placeholder="RC final"
@@ -520,78 +498,72 @@ export function RegisterCalculationEdit({
                   }
                 }}
                 value={rcFinal}
-                inputValue={rcFinal ? parseFloat(rcFinal) : 0 }
+                inputValue={rcFinal ? parseFloat(rcFinal) : 0}
                 sliderValue={(newValue: number) => {
                   setRcFinal(newValue.toFixed(1));
                 }}
               />
 
-
-                <InputSlider
-                  title="Preço @ de venda(R$)"
-                  placeholder="Preço @"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardAppearance="dark"
-                  keyboardType="numeric"
-                  onChangeText={(e) => {
-                    if (
-                      e === "" ||
-                      e === "0" ||
-                      (e.length === 1 && e !== ".")
-                    ) {
-                      setAtSalePrice(0);
-                    } else {
-                      const num = parseFloat(e);
-                      if (!isNaN(num) && num <= 1000) {
-                        setAtSalePrice(num);
-                      }
+              <InputSlider
+                title="Preço @ de venda(R$)"
+                placeholder="Preço @"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardAppearance="dark"
+                keyboardType="numeric"
+                onChangeText={(e) => {
+                  if (e === "" || e === "0" || (e.length === 1 && e !== ".")) {
+                    setAtSalePrice(0);
+                  } else {
+                    const num = parseFloat(e);
+                    if (!isNaN(num) && num <= 1000) {
+                      setAtSalePrice(num);
                     }
-                  }}
-                  value={atSalePrice.toString()}
-                  sliderValue={(value) => setAtSalePrice(value)}
-                  isSlide
-                  inputValue={atSalePrice}
-                  maximumValueSlider={1000}
-                />
+                  }
+                }}
+                value={atSalePrice.toString()}
+                sliderValue={(value) => setAtSalePrice(value)}
+                isSlide
+                inputValue={atSalePrice}
+                maximumValueSlider={1000}
+              />
 
-                <ShowResult
-                  title="Preço @ produzida(R$)"
-                  label={priceAtProduced}
-                  isMoney
-                />
-                <ShowResult
-                  title="Valor de compra(R$)"
-                  label={purchasePrice}
-                  isMoney
-                />
+              <ShowResult
+                title="Preço @ produzida(R$)"
+                label={priceAtProduced}
+                isMoney
+              />
+              <ShowResult
+                title="Valor de compra(R$)"
+                label={purchasePrice}
+                isMoney
+              />
 
-                <ShowResult title="Quantidade de @ Produzidas" label={bash} />
-                <ShowResult
-                  title="Preço de venda(R$)"
-                  label={description}
-                  isMoney
-                />
+              <ShowResult title="Quantidade de @ Produzidas" label={bash} />
+              <ShowResult
+                title="Preço de venda(R$)"
+                label={description}
+                isMoney
+              />
 
-                <ShowResult
-                  title="Rendimento do capital(%)"
-                  label={returnOnCapital}
-                />
+              <ShowResult
+                title="Rendimento do capital(%)"
+                label={returnOnCapital}
+              />
 
-                <ShowResult title="Resultado" label={result} isMoney />
-                <ButtonHandleSubmit
-                  title="Salvar Alteração"
-                  onPress={handleSubmit}
-                  enabled={!loading}
-                  loading={loading}
-                />
-              </Container>
-            ) : (
-              <LoadingScreen />
-            )}
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+              <ShowResult title="Resultado" label={result} isMoney />
+              <ButtonHandleSubmit
+                title="Salvar Alteração"
+                onPress={handleSubmit}
+                enabled={!loading}
+                loading={loading}
+              />
+            </Container>
+          ) : (
+            <LoadingScreen />
+          )}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 }

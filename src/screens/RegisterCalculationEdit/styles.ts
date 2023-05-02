@@ -9,12 +9,6 @@ export const Container = styled.View`
   margin-bottom:60px;
 `;
 
-export const ContainerInputSlider = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 20px;
-`;
-
 export const TitleTag = styled.Text`
   font-size: 18px;
   font-family: ${({ theme }) => theme.FONT_FAMILY.REGULAR};

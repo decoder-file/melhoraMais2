@@ -26,71 +26,31 @@ export interface ButtonProps extends TouchableOpacityProps {
   tagId?: string;
   title: string;
   result: string;
-  marginTop?: number;
   updatedAt: string;
   clickCalculationCard: () => void;
   deleteCalculation: () => void;
+  tagColor: string;
+  tagTitle: string;
 }
 
 export function CardCalculation({
   tagId,
   title,
   result,
-  marginTop,
   clickCalculationCard,
   deleteCalculation,
   updatedAt,
+  tagColor,
+  tagTitle,
 }: ButtonProps) {
-  const [listTag, setListTag] = useState<any[]>([]);
-  const [tagInfo, setTagInfo] = useState<any[]>([]);
-
-  const tagSearch = async () => {
-    api
-      .get("/tag-calculations")
-      .then((response) => {
-        setListTag(response.data);
-      })
-      .catch((err) => {
-        showMessage({
-          message: "Error!",
-          description: "Ocorreu para carregar as tag personalizadas",
-          type: "danger",
-          icon: "danger",
-        });
-      });
-  };
-
-  const selectedTagSearch = () => {
-    if (tagId) {
-      function buscarNumerosPares(value: any) {
-        if (value.id === tagId) return value;
-      }
-
-      if (listTag) {
-        const tag = listTag.filter(buscarNumerosPares);
-        setTagInfo(tag);
-      }
-    }
-  };
-
-  useEffect(() => {
-    tagSearch();
-  }, []);
-
-  useEffect(() => {
-    selectedTagSearch();
-  }, [listTag]);
-
+  console.log('tagTitle', tagTitle)
   return (
     <Container>
       <ContainerDescription activeOpacity={0.8} onPress={clickCalculationCard}>
-        {tagInfo.length > 0 && (
+        {tagColor && tagTitle && (
           <ContainerTag>
-            <Tag
-              activeOpacity={0.8}
-              style={{ backgroundColor: tagInfo[0].color }}
-            >
-              <TitleTag>{tagInfo[0].title}</TitleTag>
+            <Tag activeOpacity={0.8} style={{ backgroundColor: tagColor }}>
+              <TitleTag>{tagTitle}</TitleTag>
             </Tag>
           </ContainerTag>
         )}

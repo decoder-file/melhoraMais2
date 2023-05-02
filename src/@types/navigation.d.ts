@@ -5,7 +5,7 @@ export declare global {
       signUp: undefined;
       resetPassword: undefined;
       tokenSending: undefined;
-      Dashboard: undefined;
+      Dashboard: RegisterCalculationEditProps;
       CreateTag: undefined;
       RegisterCalculation: undefined;
       Profile: undefined;
