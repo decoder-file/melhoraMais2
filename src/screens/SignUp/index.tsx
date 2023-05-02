@@ -101,7 +101,7 @@ export function SignUp() {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
-            behavior="height"
+            behavior="position"
             enabled
             style={{
               flex: 1,
@@ -129,8 +129,8 @@ export function SignUp() {
                     autoCorrect={false}
                     onChangeText={setName}
                     value={name}
-                    returnKeyType="next"
                     icon={<User />}
+                    returnKeyType="next"
                   />
                   <Separator />
                   <InputEmail
@@ -154,6 +154,8 @@ export function SignUp() {
                     placeholder="Confirme sua senha"
                     onChangeText={setConfirmPassword}
                     value={confirmPassword}
+                    returnKeyType="done"
+                    onSubmitEditing={handleRegister}
                   />
                 </ContainerInput>
 

@@ -4,7 +4,7 @@ import { ptForm } from "yup-locale-pt";
 Yup.setLocale(ptForm);
 
 import { useNavigation } from "@react-navigation/native";
-import { KeyboardAvoidingView, ScrollView, View } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 import { Header } from "../../components/Header";
@@ -234,17 +234,17 @@ export function RegisterCalculation() {
     <>
       <Header title="Novo cálculo" />
       <KeyboardAvoidingView
-        behavior="padding"
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined} 
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : undefined} 
         enabled
         style={{
           flex: 1,
           backgroundColor: theme.COLORS.GRAY_50,
-          justifyContent: "center",
         }}
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          style={{ backgroundColor: "#FCF9F2" }}
+          style={{ backgroundColor: "#FCF9F2", flex: 1 }}
         >
           <Container>
             <TitleTag>Etiquetas</TitleTag>

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { ptForm } from "yup-locale-pt";
 Yup.setLocale(ptForm);
 
-import { KeyboardAvoidingView, ScrollView, View } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 import { Header } from "../../components/Header";
@@ -304,8 +304,8 @@ export function RegisterCalculationEdit({
     <>
       <Header title="Editar cálculo" />
       <KeyboardAvoidingView
-        behavior="padding"
-        enabled
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : undefined}
         style={{
           flex: 1,
           backgroundColor: theme.COLORS.GRAY_50,

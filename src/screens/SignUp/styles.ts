@@ -46,5 +46,4 @@ export const BackButtonText = styled.Text`
 
 export const ConfirmButton = styled(Button)`
   margin-top: 20px;
-  margin-bottom: 40px;
 `

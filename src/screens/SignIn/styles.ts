@@ -5,6 +5,7 @@ import { Button } from "@components/Button";
 export const Container = styled.View`
   padding: 0 24px;
   background-color: ${({ theme }) => theme.COLORS.GRAY_50};
+  flex: 1;
   justify-content: center;
 `;
 
@@ -28,7 +29,7 @@ export const SubTitle = styled.Text`
 `
 
 export const ButtonLogin = styled(Button)`
-  margin-top: 40px;
+  margin-top: 20px;
 `
 
 export const ButtonForgotPassword = styled.Text`
@@ -41,7 +42,7 @@ export const ButtonForgotPassword = styled.Text`
 
 export const Footer = styled.View`
   align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
 `
 
 export const ButtonCreateAccount = styled.Text` 
