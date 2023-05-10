@@ -19,6 +19,9 @@ import {
   ButtonAddTag,
   TitleButtonTag,
   ButtonHandleSubmit,
+  ContainerTitleTag,
+  ButtonManageTag,
+  TextManageTag,
 } from "./styles";
 import { api } from "../../services/api";
 import { ShowResult } from "../../components/ShowResult";
@@ -228,15 +231,15 @@ export function RegisterCalculation() {
     purchasePrice,
     description,
     result,
-    gmd
+    gmd,
   ]);
 
   return (
     <>
       <Header title="Novo cálculo" />
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined} 
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : undefined} 
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : undefined}
         enabled
         style={{
           flex: 1,
@@ -248,7 +251,12 @@ export function RegisterCalculation() {
           style={{ backgroundColor: "#FCF9F2", flex: 1 }}
         >
           <Container>
-            <TitleTag>Etiquetas</TitleTag>
+            <ContainerTitleTag>
+              <TitleTag>Etiquetas</TitleTag>
+              <ButtonManageTag onPress={() => navigation.navigate("ManageTag")}>
+                <TextManageTag>Gerenciar Etiquetas</TextManageTag>
+              </ButtonManageTag>
+            </ContainerTitleTag>
             <ContainerTag>
               {listTag &&
                 listTag.map((e) => (

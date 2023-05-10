@@ -6,6 +6,7 @@ import { Dashboard } from "../screens/Dashboard";
 import { RegisterCalculation } from "../screens/RegisterCalculation";
 import { Profile } from "../screens/Profile";
 import { RegisterCalculationEdit, RegisterCalculationEditProps} from "../screens/RegisterCalculationEdit";
+import { ManageTag } from "@screens/ManageTag";
 
 
 export type RootStackParamList = {
@@ -14,6 +15,7 @@ export type RootStackParamList = {
   RegisterCalculation: undefined;
   RegisterCalculationEdit: RegisterCalculationEditProps;
   Profile: undefined;
+  ManageTag: undefined;
 };
 
 const { Navigator, Screen } = createStackNavigator<RootStackParamList>();
@@ -44,6 +46,11 @@ export function AppRoutes() {
       <Screen
         name="Profile"
         component={Profile}
+        options={{ headerShown: false }}
+      />
+      <Screen
+        name="ManageTag"
+        component={ManageTag}
         options={{ headerShown: false }}
       />
     </Navigator>

@@ -9,6 +9,7 @@ export declare global {
       CreateTag: undefined;
       RegisterCalculation: undefined;
       Profile: undefined;
+      ManageTag: undefined;
     }
   }
 }
