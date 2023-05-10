@@ -290,6 +290,7 @@ export function RegisterCalculationEdit({
     purchasePrice,
     description,
     result,
+    gmd
   ]);
 
   useEffect(() => {

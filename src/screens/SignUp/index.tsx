@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
   StatusBar,
   TouchableWithoutFeedback,
 } from "react-native";
@@ -101,7 +102,8 @@ export function SignUp() {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <KeyboardAvoidingView
-            behavior="position"
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : undefined}
             enabled
             style={{
               flex: 1,

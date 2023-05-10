@@ -228,6 +228,7 @@ export function RegisterCalculation() {
     purchasePrice,
     description,
     result,
+    gmd
   ]);
 
   return (

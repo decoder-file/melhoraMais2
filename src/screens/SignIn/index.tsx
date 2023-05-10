@@ -72,7 +72,7 @@ export default function SignIn() {
   }
 
   return (
-    // <SafeAreaView style={{ flex: 1, backgroundColor: theme.COLORS.GRAY_50 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.COLORS.GRAY_50 }}>
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -130,6 +130,6 @@ export default function SignIn() {
         </S.Container>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
-    // </SafeAreaView>
+  </SafeAreaView>
   );
 }
