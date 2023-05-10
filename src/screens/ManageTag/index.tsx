@@ -14,8 +14,17 @@ import {
   Title,
 } from "./styles";
 import { ListTag } from "@components/ListTag";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "@routes/app.routes";
 
-export function ManageTag() {
+export interface ManageTagProps
+  extends StackScreenProps<RootStackParamList, "ManageTag"> {}
+
+export interface ManageTagPropsRoute {
+  refreshing?: boolean;
+}
+
+export function ManageTag({ route }: ManageTagProps) {
   const navigation = useNavigation();
   const [listTag, setListTag] = useState<any[]>([]);
   const [loadingTag, setLoadingTag] = useState(false);
@@ -49,7 +58,7 @@ export function ManageTag() {
 
   useEffect(() => {
     tagSearch();
-  }, []);
+  }, [route]);
 
   return (
     <>
@@ -58,7 +67,7 @@ export function ManageTag() {
       <Container>
         <ButtonCreateTag
           title="Adicionar nova etiqueta"
-          onPress={() => navigation.navigate("CreateTag")}
+          onPress={() => navigation.navigate("CreateTag", {flow: 'ManageTag'})}
         />
 
         <ContainerManageTag>
@@ -68,7 +77,12 @@ export function ManageTag() {
             showsVerticalScrollIndicator={false}
             data={listTag}
             renderItem={({ item }) => (
-              <ListTag title={item.title} color={item.color} key={item.id} />
+              <ListTag
+                onPress={() => navigation.navigate("EditTag", { id: item.id })}
+                title={item.title}
+                color={item.color}
+                key={item.id}
+              />
             )}
             keyExtractor={(item) => item.id.toString()}
             initialNumToRender={10}

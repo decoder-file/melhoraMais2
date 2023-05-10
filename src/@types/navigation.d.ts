@@ -6,10 +6,11 @@ export declare global {
       resetPassword: undefined;
       tokenSending: undefined;
       Dashboard: RegisterCalculationEditProps;
-      CreateTag: undefined;
+      CreateTag: CreateTagProps;
       RegisterCalculation: undefined;
       Profile: undefined;
-      ManageTag: undefined;
+      ManageTag: ManageTagProps;
+      EditTag: EditTagProps;
     }
   }
 }

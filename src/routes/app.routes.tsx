@@ -1,21 +1,25 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { CreateTag } from "../screens/CreateTag";
+import { CreateTag, CreateTagPropsRoute } from "../screens/CreateTag";
 import { Dashboard } from "../screens/Dashboard";
 import { RegisterCalculation } from "../screens/RegisterCalculation";
 import { Profile } from "../screens/Profile";
-import { RegisterCalculationEdit, RegisterCalculationEditProps} from "../screens/RegisterCalculationEdit";
-import { ManageTag } from "@screens/ManageTag";
-
+import {
+  RegisterCalculationEdit,
+  RegisterCalculationEditProps,
+} from "../screens/RegisterCalculationEdit";
+import { ManageTag, ManageTagPropsRoute } from "@screens/ManageTag";
+import { EditTag, EditTagPropsRoute } from "@screens/EditTag";
 
 export type RootStackParamList = {
-  CreateTag: undefined;
+  CreateTag: CreateTagPropsRoute;
   Dashboard: RegisterCalculationEditProps;
   RegisterCalculation: undefined;
   RegisterCalculationEdit: RegisterCalculationEditProps;
   Profile: undefined;
-  ManageTag: undefined;
+  ManageTag: ManageTagPropsRoute;
+  EditTag: EditTagPropsRoute;
 };
 
 const { Navigator, Screen } = createStackNavigator<RootStackParamList>();
@@ -38,7 +42,7 @@ export function AppRoutes() {
         component={RegisterCalculation}
         options={{ headerShown: false }}
       />
-       <Screen
+      <Screen
         name="RegisterCalculationEdit"
         component={RegisterCalculationEdit}
         options={{ headerShown: false }}
@@ -51,6 +55,11 @@ export function AppRoutes() {
       <Screen
         name="ManageTag"
         component={ManageTag}
+        options={{ headerShown: false }}
+      />
+      <Screen
+        name="EditTag"
+        component={EditTag}
         options={{ headerShown: false }}
       />
     </Navigator>

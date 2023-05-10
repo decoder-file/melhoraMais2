@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 
-import { ScrollView, StatusBar } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { Alert, ScrollView, StatusBar } from "react-native";
 import { showMessage } from "react-native-flash-message";
 
 import { Header } from "../../components/Header";
@@ -17,25 +16,48 @@ import {
   CardTag,
   TagSelect,
   ButtonSave,
+  ButtonDeleteTag,
+  TextButtonDeleteTag,
 } from "./styles";
-import { RootStackParamList } from "@routes/app.routes";
 import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "@routes/app.routes";
+import { LoadingScreen } from "@components/LoadingScreen";
 
-export interface CreateTagProps
-  extends StackScreenProps<RootStackParamList, "CreateTag"> {}
-export interface CreateTagPropsRoute {
-  flow: "ManageTag" | "CreateCalculation";
+export interface EditTagProps
+  extends StackScreenProps<RootStackParamList, "EditTag"> {}
+
+export interface EditTagPropsRoute {
+  id: string;
 }
 
-export function CreateTag({ route }: CreateTagProps) {
-  const navigation = useNavigation();
-
+export function EditTag({ route, navigation }: EditTagProps) {
   const [tagSelect, setTagSelect] = useState("");
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingTag, setLoadingTag] = useState(false);
 
   const handleTag = (color: string) => {
     setTagSelect(color);
+  };
+
+  const tagSearch = async () => {
+    setLoadingTag(true);
+    api
+      .get(`/tag-calculations/${route.params.id}`)
+      .then((response) => {
+        setTagSelect(response.data.color);
+        setTitle(response.data.title);
+        setLoadingTag(false);
+      })
+      .catch((err) => {
+        showMessage({
+          message: "Error!",
+          description: "Ocorreu para carregar as tag personalizadas",
+          type: "danger",
+          icon: "danger",
+        });
+        setLoadingTag(false);
+      });
   };
 
   async function handleSubmit() {
@@ -58,18 +80,17 @@ export function CreateTag({ route }: CreateTagProps) {
       await schema.validate({
         title,
       });
-      await api.post("/tag-calculations", { title: title, color: tagSelect });
+      await api.patch(`/tag-calculations/${route.params.id}`, {
+        title: title,
+        color: tagSelect,
+      });
       showMessage({
         message: "Sucesso!",
         description: "Tag criada com sucesso!",
         type: "success",
         icon: "success",
       });
-      if (route.params.flow === "CreateCalculation") {
-        navigation.navigate("RegisterCalculation");
-      } else {
-        navigation.navigate("ManageTag", { refreshing: true });
-      }
+      navigation.navigate("ManageTag", { refreshing: true });
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         showMessage({
@@ -91,6 +112,54 @@ export function CreateTag({ route }: CreateTagProps) {
     }
     setLoading(false);
   }
+  function handleDeleteTag() {
+    Alert.alert(
+      "Deseja apagar esta etiqueta?",
+      "A etiqueta será removida de todas as mensagens. Tem certeza de que deseja apagar esta etiqueta",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Apagar", onPress: () => handleConfirmeDeleteTag() },
+      ]
+    );
+  }
+
+  async function handleConfirmeDeleteTag() {
+    try {
+      await api.delete(`/tag-calculations/${route.params.id}`);
+      showMessage({
+        message: "Sucesso!",
+        description: "Tag deletada com sucesso!",
+        type: "success",
+        icon: "success",
+      });
+      navigation.navigate("ManageTag", { refreshing: true });
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        showMessage({
+          message: "Ops!",
+          description: error.message,
+          type: "danger",
+        });
+        setLoading(false);
+      } else {
+        showMessage({
+          message: "Erro ao deletar tag",
+          description:
+            "Ocorreu um erro inesperado. Tente novamente mais tarde!",
+          type: "danger",
+          icon: "danger",
+        });
+        setLoading(false);
+      }
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    tagSearch();
+  }, []);
+
+  if (loadingTag) return <LoadingScreen />;
 
   return (
     <>
@@ -172,12 +241,16 @@ export function CreateTag({ route }: CreateTagProps) {
 
           <ButtonSave>
             <Button
-              title="Criar"
+              title="Salvar"
               onPress={handleSubmit}
               enabled={!loading}
               loading={loading}
             />
           </ButtonSave>
+
+          <ButtonDeleteTag onPress={handleDeleteTag}>
+            <TextButtonDeleteTag>Apagar etiqueta</TextButtonDeleteTag>
+          </ButtonDeleteTag>
         </Container>
       </ScrollView>
     </>

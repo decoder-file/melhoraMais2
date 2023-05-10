@@ -270,7 +270,7 @@ export function RegisterCalculation() {
                   />
                 ))}
             </ContainerTag>
-            <ButtonAddTag onPress={() => navigation.navigate("CreateTag")}>
+            <ButtonAddTag onPress={() => navigation.navigate("CreateTag", {flow: 'CreateCalculation'})}>
               <TitleButtonTag>Criar nova etiqueta</TitleButtonTag>
             </ButtonAddTag>
             <Input
